@@ -1,0 +1,46 @@
+.bgWrap {
+    position: relative; /* Anchor for absolute bg children */
+    overflow: hidden;
+}
+
+/* Glow Patch #1: Top-Left Red */
+.bgGlowRed {
+    position: absolute;
+    top: -120px;
+    left: -80px;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 78, 78, 0.18), transparent 70%);
+    filter: blur(90px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Glow Patch #2: Bottom-Right Orange */
+.bgGlowOrange {
+    position: absolute;
+    bottom: -100px;
+    right: -60px;
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 173, 96, 0.12), transparent 70%);
+    filter: blur(80px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Overlay Gradient */
+.bgOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0.14),
+        rgba(255,78,78,0.05)
+    );
+    z-index: 1;
+    pointer-events: none;
+}
+
