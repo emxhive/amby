@@ -3,9 +3,12 @@
 namespace App\Managers;
 
 use App\Http\Resources\BaseResource;
+use Cache;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Throwable;
 
 abstract class BaseManager
 {
@@ -30,30 +33,80 @@ abstract class BaseManager
 
     public function find($id): ?JsonResource
     {
-        $model = $this->model()::with($this->relations())->find($id);
-        return $model ? $this->toResource($model) : null;
+        // Use cache to store frequently accessed models
+        $cacheKey = $this->model() . ':' . $id;
+
+        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($id) {
+            $model = $this->model()::with($this->relations())->find($id);
+            return $model ? $this->toResource($model) : null;
+        });
     }
 
+    /**
+     * @throws Throwable
+     */
     public function create(array $data): JsonResource
     {
-        $model = $this->model()::create($data);
-        return $this->toResource($model);
+        // Use transaction to ensure data consistency
+        return DB::transaction(function () use ($data) {
+            $model = $this->model()::create($data);
+            return $this->toResource($model);
+        });
     }
 
+    /**
+     * @throws Throwable
+     */
     public function update(Model $model, array $data): JsonResource
     {
-        $model->fill($data)->save();
-        return $this->toResource($model);
+        // Use transaction to ensure data consistency
+        $result = DB::transaction(function () use ($model, $data) {
+            $model->fill($data)->save();
+            return $this->toResource($model);
+        });
+
+        // Invalidate cache for this model
+        $this->forgetModelCache($model->id);
+
+        return $result;
     }
 
+    /**
+     * @throws Throwable
+     */
     public function delete(Model $model): bool
     {
-        return $model->delete();
+        // Use transaction to ensure data consistency
+        $result = DB::transaction(function () use ($model) {
+            return $model->delete();
+        });
+
+        // Invalidate cache for this model
+        $this->forgetModelCache($model->id);
+
+        return $result;
     }
 
-    public function query()
+    /**
+     * Forget the cached model
+     */
+    protected function forgetModelCache($id): void
     {
-        return $this->model()::with($this->relations());
+        $cacheKey = $this->model() . ':' . $id;
+        Cache::forget($cacheKey);
+    }
+
+    public function query(array $relations = null)
+    {
+        $query = $this->model()::query();
+
+        if ($relations !== null) {
+            $query->with($relations);
+        } else {
+            $query->with($this->relations());
+        }
+
+        return $query;
     }
 
     public function toResource(Model $model): JsonResource
@@ -93,7 +146,7 @@ abstract class BaseManager
     }
 
 
-    public function list(array $filters = []): ResourceCollection
+    public function list(array $filters = [], int $perPage = 15): ResourceCollection
     {
         $hasFilters = !empty($this->filterable)
             && collect($filters)->keys()->intersect($this->filterable)->isNotEmpty();
@@ -102,7 +155,7 @@ abstract class BaseManager
             ? $this->filter($filters)
             : $this->query();
 
-        $items = $query->get();
+        $items = $query->paginate($perPage);
         return $this->toResourceCollection($items);
     }
 

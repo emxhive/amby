@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Response;
 use App\Models\Order;
 
-class OrderControllerC extends CrudController
+class ShopOrderController extends CrudController
 {
     use HasOrderImplements;
 
@@ -17,7 +17,9 @@ class OrderControllerC extends CrudController
     public function index(Request $request): Response
     {
         $filters = $request->only(['status', 'created_at']);
-        $orders = $this->manager()->query()->get();
+
+        // Only load necessary relationships for the index view
+        $orders = $this->manager()->query(['user'])->paginate(15);
 
         return inertia(V::C_O_I, $this->wrap($orders, true) + [
                 'filters' => $filters,
@@ -26,6 +28,9 @@ class OrderControllerC extends CrudController
 
     public function show(Order $order): Response
     {
+        // For the show view, we need more detailed information including items and address
+        $order->load(['user', 'address', 'orderItems']);
+
         return inertia(V::C_O_S, $this->wrap($order));
     }
 }

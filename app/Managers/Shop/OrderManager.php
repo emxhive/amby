@@ -18,14 +18,12 @@ class OrderManager extends BaseManager
         'user_id',
     ];
 
-    public function query()
+    public function query(array $relations = null)
     {
-        $query = parent::query();
+        $query = parent::query($relations);
         if (!$this->isAdmin) {
             $query->where('user_id', auth()->id());
         }
         return $query;
     }
-
-
 }

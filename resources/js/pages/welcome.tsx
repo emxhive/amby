@@ -1,4 +1,4 @@
-import HeaderNav from '@/components/welcome/HeaderNav';
+import HeaderNav from '@/components/welcome/header-navbar';
 import HeroTextSection from '@/components/welcome/hero-left';
 import { pi } from '@/lib/utils';
 import ss from '../../css/welcome.module.css';
@@ -22,5 +22,7 @@ const LandingPage: React.FC = () => {
         </div>
     );
 };
+
+
 
 export default LandingPage;

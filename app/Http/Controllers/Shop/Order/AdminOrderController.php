@@ -14,7 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Response;
 
-class OrderControllerA extends CrudController
+class AdminOrderController extends CrudController
 {
     use HasOrderImplements;
 
@@ -27,7 +27,8 @@ class OrderControllerA extends CrudController
     public function index(Request $request): Response
     {
         $filters = $request->only($this->manager->filterable);
-        $orders = $this->manager()->query()->get();
+        // Only load necessary relationships for the index view and use pagination
+        $orders = $this->manager()->query(['user'])->paginate(15);
 
         return inertia(V::A_O_I, $this->wrap($orders, true) + [
                 'filters' => $filters,
@@ -36,6 +37,9 @@ class OrderControllerA extends CrudController
 
     public function show(Order $order): Response
     {
+        // For the show view, we need more detailed information including items and address
+        $order->load(['user', 'address', 'orderItems']);
+
         return inertia(V::A_O_S, $this->wrap($order));
     }
 

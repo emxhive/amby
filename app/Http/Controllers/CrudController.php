@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Managers\BaseManager;
+use Exception;
 use Illuminate\Http\Request;
+use Log;
 
 abstract class CrudController extends Controller
 {
@@ -16,19 +18,53 @@ abstract class CrudController extends Controller
         return $this->manager()->list();
     }
 
+    /**
+     * @throws Exception
+     */
     final public function cStore($request)
     {
-        return $this->manager()->create($request->validated());
+        try {
+            return $this->manager()->create($request->validated());
+        } catch (Exception $e) {
+            Log::error('Error creating model: ' . $e->getMessage(), [
+                'request' => $request->validated(),
+                'exception' => $e
+            ]);
+            throw $e;
+        }
     }
 
+    /**
+     * @throws Exception
+     */
     final public function cUpdate($request, $model)
     {
-        return $this->manager()->update($model, $request->validated());
+        try {
+            return $this->manager()->update($model, $request->validated());
+        } catch (Exception $e) {
+            Log::error('Error updating model: ' . $e->getMessage(), [
+                'model' => $model->id,
+                'request' => $request->validated(),
+                'exception' => $e
+            ]);
+            throw $e;
+        }
     }
 
+    /**
+     * @throws Exception
+     */
     final public function cDestroy($model)
     {
-        return $this->manager()->delete($model);
+        try {
+            return $this->manager()->delete($model);
+        } catch (Exception $e) {
+            Log::error('Error deleting model: ' . $e->getMessage(), [
+                'model' => $model->id,
+                'exception' => $e
+            ]);
+            throw $e;
+        }
     }
 
     protected function wrap($resource, $isList = false): array

@@ -11,20 +11,23 @@ use Inertia\Inertia;
 use Inertia\Response;
 
 
-class ProductControllerC extends CrudController
+class ShopProductController extends CrudController
 {
     use HasProductImplements;
 
-
     public function index(Request $request)
     {
+        // Only load necessary relationships for the index view
+        $products = $this->manager()->query(['category', 'tags'])->paginate(15);
 
-        return Inertia::render(V::C_P_I, $this->wrap(parent::index($request), true));
+        return Inertia::render(V::C_P_I, $this->wrap($products, true));
     }
 
     public function show(Product $product): Response
     {
+        // For the show view, we need more detailed information including variations
+        $product->load(['category', 'tags', 'variations']);
+
         return Inertia::render(V::C_P_S, $this->wrap($product));
     }
-
 }

@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Shop\AddressController;
 use App\Http\Controllers\Shop\CartController;
-use App\Http\Controllers\Shop\Order\OrderControllerC;
+use App\Http\Controllers\Shop\Order\ShopOrderController;
 use App\Http\Controllers\Shop\OrderController;
-use App\Http\Controllers\Shop\Product\ProductControllerC;
+use App\Http\Controllers\Shop\Product\ShopProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -22,7 +22,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 Route::as("shop.")->group(
     function () {
-        Route::resource("products", ProductControllerC::class)->only(["index", "show"]);
+        Route::resource("products", ShopProductController::class)->only(["index", "show"]);
     });
 
 
@@ -34,7 +34,7 @@ Route::post('/cart/update', [CartController::class, 'updateCart']);
 
 Route::middleware(["auth"])->group(function () {
 
-    Route::resource("orders", OrderControllerC::class)->only(["index", "show"]);
+    Route::resource("orders", ShopOrderController::class)->only(["index", "show"]);
 
     Route::resource("address", AddressController::class);
 });

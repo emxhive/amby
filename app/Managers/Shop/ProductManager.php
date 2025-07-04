@@ -10,14 +10,14 @@ class ProductManager extends BaseManager
 
     public array $filterable = ["tags", "categories", "price"];
 
-    protected function model()
+    protected function model(): string
     {
         return Product::class;
     }
 
-    public function query()
+    public function query(array $relations = null)
     {
-        $query = $this->model()::with($this->relations());
+        $query = parent::query($relations);
         if (!$this->isAdmin) {
             $query->where('status', 'active');
         }

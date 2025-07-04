@@ -18,6 +18,8 @@ return new class extends Migration {
             $table->string('status')->default('pending');
             $table->timestamps();
 
+            // Add index for status column as it's used for filtering
+            $table->index('status');
         });
     }
 
