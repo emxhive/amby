@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Shop\Implements;
 
 use App\Managers\Shop\OrderManager;
 use App\Models\Order;
-use Illuminate\Http\Request;
+
 
 trait HasOrderImplements
 {
@@ -21,7 +21,7 @@ trait HasOrderImplements
         return $order;
     }
 
-    public function update(Request $request, Order $order)
+    public function update($request, Order $order)
     {
         return $this->cUpdate($request, $order);
     }

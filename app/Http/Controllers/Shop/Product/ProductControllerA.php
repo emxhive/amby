@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Shop\Product;
 
-use App\Enums\InertiaViews as V;
-use App\Enums\RouteNames as R;
+use App\Constants\InertiaViews as V;
+use App\Constants\RouteNames as R;
 use App\Http\Controllers\CrudController;
 use App\Http\Controllers\Shop\Implements\HasProductImplements;
 use App\Http\Requests\Shop\StoreProductRequest;
@@ -11,6 +11,7 @@ use App\Http\Requests\Shop\UpdateProductRequest;
 use App\Managers\Shop\ProductManager;
 use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -21,12 +22,12 @@ class ProductControllerA extends CrudController
 
     public function __construct()
     {
-        $this->manager = new ProductManager(true);
+        $this->init(ProductManager::class, true);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render(V::A_P_L, $this->wrap(parent::index(), true));
+        return Inertia::render(V::A_P_I, $this->wrap(parent::index($request), true));
     }
 
     public function show(Product $product): Response

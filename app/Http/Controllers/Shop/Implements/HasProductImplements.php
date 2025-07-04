@@ -15,7 +15,6 @@ trait HasProductImplements
         $this->manager = $manager;
     }
 
-
     public function show(Product $product): array
     {
         return $this->wrap($product);

@@ -2,8 +2,8 @@
 
 namespace App\Managers\Shop;
 
-use App\Models\Order;
 use App\Managers\BaseManager;
+use App\Models\Order;
 
 class OrderManager extends BaseManager
 {
@@ -12,8 +12,20 @@ class OrderManager extends BaseManager
         return Order::class;
     }
 
-    protected function relations(): array
+    public array $filterable = [
+        'status',
+        'created_at',
+        'user_id',
+    ];
+
+    public function query()
     {
-        return ['user','orderItems'];
+        $query = parent::query();
+        if (!$this->isAdmin) {
+            $query->where('user_id', auth()->id());
+        }
+        return $query;
     }
+
+
 }

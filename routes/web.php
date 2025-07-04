@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Shop\AddressController;
 use App\Http\Controllers\Shop\CartController;
+use App\Http\Controllers\Shop\Order\OrderControllerC;
 use App\Http\Controllers\Shop\OrderController;
 use App\Http\Controllers\Shop\Product\ProductControllerC;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::post('/cart/update', [CartController::class, 'updateCart']);
 
 Route::middleware(["auth"])->group(function () {
 
-    Route::resource("orders", OrderController::class)->only(["index", "show"]);
+    Route::resource("orders", OrderControllerC::class)->only(["index", "show"]);
 
     Route::resource("address", AddressController::class);
 });

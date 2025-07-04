@@ -21,4 +21,8 @@ class Order extends Model
         'value' => 'float',
     ];
 
+    protected array $whitelist = [
+        'id', 'user_id', 'address_id', 'value', 'status', 'created_at', 'updated_at'
+    ];
+    protected array $blacklist = [];
 }

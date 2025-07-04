@@ -8,7 +8,14 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-trait HasOrderRelations{
+trait HasOrderRelations
+{
+
+    protected array $relationsMap = [
+        'items' => [],
+        'user' => [],
+        'address' => [],
+    ];
 
     public function orderItems(): HasMany
     {

@@ -25,21 +25,8 @@ abstract class BaseManager
         return array_keys((new ($this->model()))->getRelationsMap());
     }
 
-    public function list(): ResourceCollection
-    {
-        $items = $this->model()::with($this->relations())->get();
-        $collection = $this->resource::collection($items);
-        $collection->each->withAdmin($this->isAdmin);
-        return $collection;
-    }
+    public array $filterable = [];
 
-    public function paginate(int $perPage = 20): ResourceCollection
-    {
-        $paginator = $this->model()::with($this->relations())->paginate($perPage);
-        $collection = $this->resource::collection($paginator);
-        $collection->each->withAdmin($this->isAdmin);
-        return $collection;
-    }
 
     public function find($id): ?JsonResource
     {
@@ -81,4 +68,43 @@ abstract class BaseManager
         $collection->each->withAdmin($this->isAdmin);
         return $collection;
     }
+
+    public function filter(array $filters = [])
+    {
+        $query = $this->query();
+
+        if (empty($this->filterable)) {
+            return $query;
+        }
+
+        foreach ($filters as $field => $value) {
+            if (!in_array($field, $this->filterable, true) || $value === null || $value === '') {
+                continue;
+            }
+
+            if ($field === 'created_at' && is_array($value) && isset($value['from'], $value['to'])) {
+                $query->whereBetween('created_at', [$value['from'], $value['to']]);
+            } else {
+                $query->where($field, $value);
+            }
+        }
+
+        return $query;
+    }
+
+
+    public function list(array $filters = []): ResourceCollection
+    {
+        $hasFilters = !empty($this->filterable)
+            && collect($filters)->keys()->intersect($this->filterable)->isNotEmpty();
+
+        $query = $hasFilters
+            ? $this->filter($filters)
+            : $this->query();
+
+        $items = $query->get();
+        return $this->toResourceCollection($items);
+    }
+
+
 }

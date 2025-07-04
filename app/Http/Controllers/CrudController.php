@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 
+use App\Managers\BaseManager;
+use Illuminate\Http\Request;
+
 abstract class CrudController extends Controller
 {
-    abstract protected function manager();
+    abstract protected function manager() : BaseManager;
 
-    public function index()
+
+    public function index(Request $request)
     {
-        return $this->manager()->all();
+        return $this->manager()->list();
     }
 
     final public function cStore($request)

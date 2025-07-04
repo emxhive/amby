@@ -4,24 +4,23 @@ namespace App\Managers\Shop;
 
 use App\Managers\BaseManager;
 use App\Models\Product;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ProductManager extends BaseManager
 {
-    protected function model(): string
+
+    public array $filterable = ["tags", "categories", "price"];
+
+    protected function model()
     {
         return Product::class;
     }
 
-
-    public function list(): ResourceCollection
+    public function query()
     {
-        $query = $this->query();
-
+        $query = $this->model()::with($this->relations());
         if (!$this->isAdmin) {
-            $query->where("status", 'active');
+            $query->where('status', 'active');
         }
-        return $this->toResourceCollection($query->paginate());
+        return $query;
     }
-
 }

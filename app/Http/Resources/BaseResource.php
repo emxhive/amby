@@ -31,6 +31,7 @@ class BaseResource extends JsonResource
     {
         $data = [];
         foreach ($this->relations() as $relation => $config) {
+            if (!$config) continue;
             if (isset($config['show_if']) && !$config['show_if']($this->resource, $request, $this->isAdmin)) {
                 continue;
             }
