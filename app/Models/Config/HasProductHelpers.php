@@ -5,7 +5,7 @@ namespace App\Models\Config;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-trait HasProductConfig
+trait HasProductHelpers
 {
 
     use HasSlug;

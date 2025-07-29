@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->decimal('price', 10, 2);
             $table->timestamps();
 
-            // Add index for product_id as it's likely to be queried frequently
+
             $table->index('product_id');
         });
     }

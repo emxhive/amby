@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->string('image')->nullable();
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }

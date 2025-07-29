@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 
 use App\Managers\BaseManager;
 use Exception;
 use Illuminate\Http\Request;
 use Log;
+use Throwable;
 
 abstract class CrudController extends Controller
 {
@@ -19,7 +18,7 @@ abstract class CrudController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     final public function cStore($request)
     {
@@ -35,7 +34,7 @@ abstract class CrudController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     final public function cUpdate($request, $model)
     {
@@ -52,7 +51,7 @@ abstract class CrudController extends Controller
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     final public function cDestroy($model)
     {
@@ -70,7 +69,7 @@ abstract class CrudController extends Controller
     protected function wrap($resource, $isList = false): array
     {
         return [
-            "data" => $isList
+            "resource" => $isList
                 ? $this->manager()->toResourceCollection($resource)
                 : $this->manager()->toResource($resource)
         ];

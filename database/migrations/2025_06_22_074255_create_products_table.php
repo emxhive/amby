@@ -10,16 +10,16 @@ return new class extends Migration {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('category_id')->constrained('categories')->nullOnDelete();
-
             $table->string('name');
             $table->string('slug')->unique();
-            $table->decimal('price', 10, 2)->default(0);
+            $table->decimal('price', 10)->default(0);
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('status')->default('active');
-            $table->decimal('weight', 8, 2)->nullable();
-
+            $table->decimal('weight')->nullable();
             $table->timestamps();
+
+            $table->index("category_id");
         });
     }
 

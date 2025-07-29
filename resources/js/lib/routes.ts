@@ -17,22 +17,24 @@ export const routes = {
             show: 'shop.products.show',
         },
         orders: {
-            index: 'orders.index',
-            show: 'orders.show',
+            index: 'shop.orders.index',
+            show: 'shop.orders.show',
         },
         address: {
-            index: 'address.index',
-            create: 'address.create',
-            store: 'address.store',
-            show: 'address.show',
-            edit: 'address.edit',
-            update: 'address.update',
-            destroy: 'address.destroy',
+            index: 'shop.address.index',
+            create: 'shop.address.create',
+            store: 'shop.address.store',
+            show: 'shop.address.show',
+            edit: 'shop.address.edit',
+            update: 'shop.address.update',
+            destroy: 'shop.address.destroy',
         },
     },
 
     // Admin routes
     admin: {
+        base: 'admin.base', // Generic admin route for not yet implemented features
+        dashboard: 'admin.dashboard',
         products: {
             index: 'admin.products.index',
             create: 'admin.products.create',
@@ -50,6 +52,33 @@ export const routes = {
             edit: 'admin.orders.edit',
             update: 'admin.orders.update',
             destroy: 'admin.orders.destroy',
+        },
+        users: {
+            index: 'admin.users.index',
+            create: 'admin.users.create',
+            store: 'admin.users.store',
+            show: 'admin.users.show',
+            edit: 'admin.users.edit',
+            update: 'admin.users.update',
+            destroy: 'admin.users.destroy',
+        },
+        recipes: {
+            index: 'admin.recipes.index',
+            create: 'admin.recipes.create',
+            store: 'admin.recipes.store',
+            show: 'admin.recipes.show',
+            edit: 'admin.recipes.edit',
+            update: 'admin.recipes.update',
+            destroy: 'admin.recipes.destroy',
+        },
+        reviews: {
+            index: 'admin.reviews.index',
+            create: 'admin.reviews.create',
+            store: 'admin.reviews.store',
+            show: 'admin.reviews.show',
+            edit: 'admin.reviews.edit',
+            update: 'admin.reviews.update',
+            destroy: 'admin.reviews.destroy',
         },
     },
 

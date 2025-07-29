@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Models\Attributes\HasProductAttributes;
-use App\Models\Config\HasProductConfig;
+use App\Models\Config\HasProductHelpers;
 use App\Models\Relations\HasProductRelations;
 use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -11,10 +11,14 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
 
-    use HasProductConfig;
+    use HasProductHelpers;
     use HasProductRelations;
     use HasProductAttributes;
     use ModelTrait;
+
+    protected $appends = [
+        'has_variations',
+    ];
 
     protected $fillable = [
         'category_id',

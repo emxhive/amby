@@ -118,7 +118,10 @@ abstract class BaseManager
     public function toResourceCollection($resource): ResourceCollection
     {
         $collection = $this->resource::collection($resource);
-        $collection->each->withAdmin($this->isAdmin);
+        $collection->each(function ($resource) {
+            $resource->withAdmin($this->isAdmin);
+        });
+
         return $collection;
     }
 

@@ -17,10 +17,10 @@ class ShopProductController extends CrudController
 
     public function index(Request $request)
     {
-        // Only load necessary relationships for the index view
+        // Only load the necessary relationships for the index view
         $products = $this->manager()->query(['category', 'tags'])->paginate(15);
 
-        return Inertia::render(V::C_P_I, $this->wrap($products, true));
+        return Inertia::render(V::S_P_I, $this->wrap($products, true));
     }
 
     public function show(Product $product): Response
@@ -28,6 +28,6 @@ class ShopProductController extends CrudController
         // For the show view, we need more detailed information including variations
         $product->load(['category', 'tags', 'variations']);
 
-        return Inertia::render(V::C_P_S, $this->wrap($product));
+        return Inertia::render(V::S_P_S, $this->wrap($product));
     }
 }

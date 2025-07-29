@@ -1,8 +1,10 @@
 import '../css/app.css';
 
+import { ModalProvider } from '@/hooks/use-modal-system';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+import 'react-phone-input-2/lib/style.css';
 import { initializeTheme } from './hooks/use-appearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -13,7 +15,11 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <ModalProvider>
+                <App {...props} />
+            </ModalProvider>,
+        );
     },
     progress: {
         color: '#4B5563',

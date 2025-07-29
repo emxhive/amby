@@ -1,0 +1,364 @@
+# Database Schemas for Amby Project
+
+Generated on: 07/29/2025 07:46:40
+
+## Table: users
+
+### Columns:
+
+- $table->id()
+
+- $table->string('name')
+
+- $table->string('email')->unique()
+
+- $table->string('phone')->unique()->nullable()
+
+- $table->timestamp('email_verified_at')->nullable()
+
+- $table->string('password')
+
+- $table->rememberToken()
+
+- $table->timestamps()
+
+
+
+## Table: password_reset_tokens
+
+### Columns:
+
+- $table->string('email')->primary()
+
+- $table->string('token')
+
+- $table->timestamp('created_at')->nullable()
+
+
+
+## Table: sessions
+
+### Columns:
+
+- $table->string('id')->primary()
+
+- $table->foreignId('user_id')->nullable()->index()
+
+- $table->string('ip_address', 45)->nullable()
+
+- $table->text('user_agent')->nullable()
+
+- $table->longText('payload')
+
+- $table->integer('last_activity')->index()
+
+
+
+## Table: cache
+
+### Columns:
+
+- $table->string('key')->primary()
+
+- $table->mediumText('value')
+
+- $table->integer('expiration')
+
+
+
+## Table: cache_locks
+
+### Columns:
+
+- $table->string('key')->primary()
+
+- $table->string('owner')
+
+- $table->integer('expiration')
+
+
+
+## Table: jobs
+
+### Columns:
+
+- $table->id()
+
+- $table->string('queue')->index()
+
+- $table->longText('payload')
+
+- $table->unsignedTinyInteger('attempts')
+
+- $table->unsignedInteger('reserved_at')->nullable()
+
+- $table->unsignedInteger('available_at')
+
+- $table->unsignedInteger('created_at')
+
+
+
+## Table: job_batches
+
+### Columns:
+
+- $table->string('id')->primary()
+
+- $table->string('name')
+
+- $table->integer('total_jobs')
+
+- $table->integer('pending_jobs')
+
+- $table->integer('failed_jobs')
+
+- $table->longText('failed_job_ids')
+
+- $table->mediumText('options')->nullable()
+
+- $table->integer('cancelled_at')->nullable()
+
+- $table->integer('created_at')
+
+- $table->integer('finished_at')->nullable()
+
+
+
+## Table: failed_jobs
+
+### Columns:
+
+- $table->id()
+
+- $table->string('uuid')->unique()
+
+- $table->text('connection')
+
+- $table->text('queue')
+
+- $table->longText('payload')
+
+- $table->longText('exception')
+
+- $table->timestamp('failed_at')->useCurrent()
+
+
+
+## Table: products
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('category_id')->constrained('categories')->nullOnDelete()
+
+- $table->string('name')
+
+- $table->string('slug')->unique()
+
+- $table->text('description')->nullable()
+
+- $table->string('image')->nullable()
+
+- $table->string('status')->default('active')
+
+- $table->timestamps()
+
+- $table->index("category_id")
+
+
+
+## Table: orders
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('user_id')->constrained()->onDelete('cascade')
+
+- $table->foreignId('address_id')->constrained()->onDelete('cascade')
+
+- $table->decimal('value', 10, 2)
+
+- $table->string('status')->default('pending')
+
+- $table->timestamps()
+
+- $table->index('status')
+
+
+
+## Table: order_items
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('order_id')->constrained()->onDelete('cascade')
+
+- $table->foreignId('product_id')->constrained()->onDelete('cascade')
+
+- $table->foreignId('product_variation_id')->nullable()->constrained('product_variations')->nullOnDelete()
+
+- $table->integer('quantity')->default(1)
+
+- $table->decimal('price', 10, 2)
+
+- $table->timestamps()
+
+- $table->index('product_id')
+
+
+
+## Table: addresses
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('user_id')->constrained()->onDelete('cascade')
+
+- $table->string('recipient_name')
+
+- $table->string('phone')->nullable()
+
+- $table->string('street')
+
+- $table->string('city')
+
+- $table->string('state')->nullable()
+
+- $table->string('country')
+
+- $table->string('postal_code')->nullable()
+
+- $table->boolean('is_default')->default(false)
+
+- $table->timestamps()
+
+
+
+## Table: categories
+
+### Columns:
+
+- $table->id()
+
+- $table->string('name')
+
+- $table->string('slug')->unique()
+
+- $table->text('description')->nullable()
+
+- $table->foreignId('parent_id')->nullable()->constrained('categories')->nullOnDelete()
+
+- $table->string('image')->nullable()
+
+- $table->boolean('is_default')->default(false)
+
+- $table->timestamps()
+
+
+
+## Table: tags
+
+### Columns:
+
+- $table->id()
+
+- $table->string('name')
+
+- $table->string('slug')->unique()
+
+- $table->timestamps()
+
+
+
+## Table: product_variations
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()
+
+- $table->string('sku')->unique()
+
+- $table->decimal('price', 10)
+
+- $table->decimal('quantity')->nullable()
+
+- $table->string('quantity_unit')->nullable()
+
+- $table->boolean('is_active')->default(true)
+
+- $table->json('attributes')->nullable()
+
+- $table->timestamps()
+
+
+
+## Table: product_tag
+
+### Columns:
+
+- $table->foreignId('product_id')->constrained('products')->cascadeOnDelete()
+
+- $table->foreignId('tag_id')->constrained('tags')->cascadeOnDelete()
+
+- $table->primary(['product_id', 'tag_id'])
+
+
+
+## Table: carts
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade')
+
+- $table->timestamps()
+
+
+
+## Table: cart_items
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('cart_id')->constrained()->onDelete('cascade')
+
+- $table->foreignId('product_id')->constrained()->onDelete('cascade')
+
+- $table->integer('quantity')->default(1)
+
+- $table->timestamps()
+
+
+
+## Table: variation_batches
+
+### Columns:
+
+- $table->id()
+
+- $table->foreignId('product_variation_id')->constrained('product_variations')->cascadeOnDelete()
+
+- $table->boolean("is_open")->default(true)
+
+- $table->unsignedInteger('stock')->default(0)
+
+- $table->unsignedInteger('sold')->default(0)
+
+- $table->text('notes')->nullable()
+
+- $table->timestamps()
+
+- $table->timestamp('closed_at')->nullable()
+
+- $table->index('product_variation_id')
+
+
+

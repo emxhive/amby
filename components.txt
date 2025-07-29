@@ -1,0 +1,317 @@
+//dashboard.tsx
+import AdminLayout from '@/layouts/admin-layout';
+import { Head } from '@inertiajs/react';
+
+export default function Dashboard() {
+    return (
+        <AdminLayout>
+            <Head title="Dashboard" />
+            <div className="grid gap-4">
+                <h2 className="text-2xl font-bold tracking-tight">Dashboard</h2>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm">
+                        <h3 className="font-semibold">Welcome to Admin Dashboard</h3>
+                        <p className="text-sm text-muted-foreground">Manage your application from here.</p>
+                    </div>
+                </div>
+            </div>
+        </AdminLayout>
+    );
+}
+
+//admin-layout.tsx
+import Sidebar from '@/layouts/components/sidebar';
+import { ReactNode } from 'react';
+import { Header } from '@/layouts/components/header';
+
+interface AdminLayoutProps {
+    children: ReactNode;
+}
+
+export default function AdminLayout({ children }: AdminLayoutProps) {
+    return (
+        <div className="flex min-h-screen text-white">
+            <Sidebar />
+            <div className="flex min-h-screen flex-1 flex-col">
+                <Header />
+                <main className="flex-1 overflow-y-auto p-8">{children}</main>
+            </div>
+        </div>
+    );
+}
+
+
+const coolDark = 'bg-[#0f172a]';
+
+const coolHeaderDark = 'border-[#232946] bg-[#10172b]';
+
+//sidebar.tsx
+import SidebarLink from '@/layouts/components/sidebar-link';
+import { sidebarLinks } from '@/layouts/lib/sidebar-data';
+import { usePage } from '@inertiajs/react';
+
+export default function Sidebar() {
+
+    const { auth } = usePage().props as unknown as {
+        auth: {
+            user: {
+                name: string;
+                role: string;
+                avatar?: string;
+            };
+        };
+    };
+
+
+    const currentRouteName = route().current()
+
+    return (
+        <aside className="flex w-64 flex-col border-r p-4">
+            <div className="mb-8 flex h-12 items-center px-2">
+                <span className="text-lg font-bold tracking-wide text-[#60a5fa]">Amby</span>
+            </div>
+            <nav className="flex-1 space-y-1">
+                {sidebarLinks.map((item) => (
+                    <SidebarLink key={item.label} label={item.label} icon={item.icon} route={item.route} active={currentRouteName === item.route} />
+                ))}
+            </nav>
+            <div className="mt-auto flex items-center gap-3 border-t border-[#232946] pt-4">
+                <img
+                    src={auth?.user?.avatar || 'https://api.dicebear.com/8.x/adventurer/svg?seed=A'}
+                    alt="Avatar"
+                    className="h-10 w-10 rounded-full border-2 border-[#232946]"
+                />
+                <div>
+                    <div className="text-sm font-semibold">{auth?.user?.name || 'Admin'}</div>
+                    <div className="text-xs text-gray-400 capitalize">{auth?.user?.role || 'admin'}</div>
+                </div>
+            </div>
+        </aside>
+    );
+}
+
+//header.tsx
+interface TopNavigationProps {
+    isSidebarOpen?: boolean;
+    setSidebarOpen?: (open: boolean) => void;
+}
+
+export function Header({ isSidebarOpen, setSidebarOpen }: TopNavigationProps) {
+    return (
+        <header className="bg-card shadow-sm">
+            <div className="flex h-16 items-center justify-between px-4">
+                {!isSidebarOpen && (
+                    <button
+                        // onClick={() => setSidebarOpen(true)}
+                        className="rounded-md p-2 hover:bg-muted"
+                    >
+                        <span className="sr-only">Open sidebar</span>
+                        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                )}
+                <div className="flex-1 px-4">
+                    <h2 className="text-lg font-medium">Dashboard</h2>
+                </div>
+                <div className="flex items-center">
+                    {/* User profile, notifications, etc. */}
+                    <button className="rounded-full p-2 hover:bg-muted">
+                        <span className="sr-only">View notifications</span>
+                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+    );
+}
+
+//sidebar-link.tsx
+import { Link, usePage } from "@inertiajs/react";
+import { LucideIcon } from "lucide-react";
+
+interface SidebarLinkProps {
+    label: string;
+    icon: LucideIcon;
+    route: string;
+    active?: boolean;
+}
+
+export default function SidebarLink({ label, icon: Icon, route, active }: SidebarLinkProps) {
+    return (
+        <Link
+            href={route}
+            className={`flex items-center px-3 py-2 rounded-md text-sm font-medium transition gap-3
+        ${active ? "bg-[#1e293b] text-white" : "text-gray-400 hover:bg-[#1e293b] hover:text-white"}`}
+        >
+            <Icon className="w-5 h-5" />
+            {label}
+        </Link>
+    );
+}
+
+//sidebar-data.ts
+import {
+    Home,
+    ShoppingCart,
+    Users,
+    ListOrdered,
+    Settings,
+    BookOpen,
+} from "lucide-react";
+import { LucideIcon } from "lucide-react";
+import { routes } from '@/lib/routes';
+
+
+export interface SidebarLinkType {
+    label: string;
+    icon: LucideIcon;
+    route: string;
+}
+
+
+export const sidebarLinks: SidebarLinkType[] = [
+    {
+        label: "Dashboard",
+        icon: Home,
+        route: routes.main.dashboard,
+    },
+    {
+        label: "Products",
+        icon: ShoppingCart,
+        route: routes.admin.products.index,
+    },
+    {
+        label: "Orders",
+        icon: ListOrdered,
+        route: routes.admin.orders.index,
+    },
+    {
+        label: "Customers",
+        icon: Users,
+        route: routes.admin.users.index,
+    },
+    {
+        label: "Recipes",
+        icon: BookOpen,
+        route: routes.admin.recipes.index,
+    },
+    {
+        label: "Settings",
+        icon: Settings,
+        route: routes.appearance,
+    },
+];
+
+//routes.ts
+/**
+ * This file contains all route names used in the application.
+ * It's generated for frontend use.
+ */
+
+export const routes = {
+    // Main routes
+    main: {
+        home: 'home',
+        dashboard: 'dashboard',
+    },
+
+    // Shop routes
+    shop: {
+        products: {
+            index: 'shop.products.index',
+            show: 'shop.products.show',
+        },
+        orders: {
+            index: 'shop.orders.index',
+            show: 'shop.orders.show',
+        },
+        address: {
+            index: 'shop.address.index',
+            create: 'shop.address.create',
+            store: 'shop.address.store',
+            show: 'shop.address.show',
+            edit: 'shop.address.edit',
+            update: 'shop.address.update',
+            destroy: 'shop.address.destroy',
+        },
+    },
+
+    // Admin routes
+    admin: {
+        products: {
+            index: 'admin.products.index',
+            create: 'admin.products.create',
+            store: 'admin.products.store',
+            show: 'admin.products.show',
+            edit: 'admin.products.edit',
+            update: 'admin.products.update',
+            destroy: 'admin.products.destroy',
+        },
+        orders: {
+            index: 'admin.orders.index',
+            create: 'admin.orders.create',
+            store: 'admin.orders.store',
+            show: 'admin.orders.show',
+            edit: 'admin.orders.edit',
+            update: 'admin.orders.update',
+            destroy: 'admin.orders.destroy',
+        },
+        users: {
+            index: 'admin.users.index',
+            create: 'admin.users.create',
+            store: 'admin.users.store',
+            show: 'admin.users.show',
+            edit: 'admin.users.edit',
+            update: 'admin.users.update',
+            destroy: 'admin.users.destroy',
+        },
+        recipes: {
+            index: 'admin.recipes.index',
+            create: 'admin.recipes.create',
+            store: 'admin.recipes.store',
+            show: 'admin.recipes.show',
+            edit: 'admin.recipes.edit',
+            update: 'admin.recipes.update',
+            destroy: 'admin.recipes.destroy',
+        },
+    },
+
+    // Auth routes
+    auth: {
+        register: 'register',
+        login: 'login',
+        logout: 'logout',
+        password: {
+            request: 'password.request',
+            email: 'password.email',
+            reset: 'password.reset',
+            store: 'password.store',
+            confirm: 'password.confirm',
+            edit: 'password.edit',
+            update: 'password.update',
+        },
+        verification: {
+            notice: 'verification.notice',
+            verify: 'verification.verify',
+            send: 'verification.send',
+        },
+    },
+
+    // Profile/Settings routes
+    profile: {
+        edit: 'profile.edit',
+        update: 'profile.update',
+        destroy: 'profile.destroy',
+    },
+
+    // Appearance settings
+    appearance: 'appearance',
+};

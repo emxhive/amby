@@ -169,11 +169,40 @@
 }
 
 @layer base {
-    * {
-        @apply border-border;
-    }
 
+    /** {*/
+    /*    @apply border-border;*/
+    /*    !*scrollbar-width: thin;*!*/
+    /*    scrollbar-color: var(--muted-foreground) transparent;*/
+    /*}*/
     body {
         @apply bg-background text-foreground;
+    }
+
+    /* Hide scrollbar buttons (arrows) */
+    ::-webkit-scrollbar-button {
+        display: none;
+    }
+
+    /* Make scrollbar slim */
+    ::-webkit-scrollbar {
+        width: 1px;
+        height: 3px;
+    }
+
+    /* Style the scrollbar track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Style the scrollbar thumb and make it rounded */
+    ::-webkit-scrollbar-thumb {
+        background: var(--muted-foreground);
+        border-radius: 9999px;
+    }
+
+    /* Darken on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--primary);
     }
 }

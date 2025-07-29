@@ -11,7 +11,7 @@ class BaseResource extends JsonResource
     protected bool $isAdmin = false;
 
 
-    protected function relations(): array
+    protected function relationsMap(): array
     {
         return $this->resource->getRelationsMap();
     }
@@ -30,17 +30,23 @@ class BaseResource extends JsonResource
     protected function serializeRelations($request): array
     {
         $data = [];
-        foreach ($this->relations() as $relation => $config) {
-            if (!$config) continue;
+        foreach ($this->relationsMap() as $relation => $config) {
+            if (!$relation) continue;
+
             if (isset($config['show_if']) && !$config['show_if']($this->resource, $request, $this->isAdmin)) {
                 continue;
             }
             if ($this->resource->relationLoaded($relation)) {
                 $related = $this->whenLoaded($relation);
+
                 $resourceClass = $config['resource'] ?? BaseResource::class;
 
                 if ($related instanceof Collection || is_array($related)) {
-                    $data[$relation] = $resourceClass::collection($related)->each->withAdmin($this->isAdmin)->toArray($request);
+                    $data[$relation] = $resourceClass::collection($related)
+                        ->each(function ($resource) {
+                            $resource->withAdmin($this->isAdmin);
+                        })
+                        ->toArray($request);
                 } elseif ($related) {
                     $data[$relation] = (new $resourceClass($related))->withAdmin($this->isAdmin);
                 } else {
@@ -54,8 +60,7 @@ class BaseResource extends JsonResource
     public function toArray($request): array
     {
         return array_merge(
-            $this->filtered(),
-            $this->serializeRelations($request)
+            $this->filtered(), $this->serializeRelations($request)
         );
     }
 
