@@ -7,13 +7,9 @@ use App\Managers\BaseManager;
 
 class UserManager extends BaseManager
 {
-    protected function model()
+    protected function model(): string
     {
         return User::class;
     }
 
-    protected function relations(): array
-    {
-        return ['addresses','orders','carts'];
-    }
 }

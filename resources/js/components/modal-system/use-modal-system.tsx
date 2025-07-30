@@ -1,17 +1,6 @@
+import { Docker } from '@/components/modal-system/components/docker';
+import { ModalContainer } from '@/components/modal-system/components/modal-container';
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { Docker } from '@/layouts/components/docker';
-import { ModalContainer } from '@/components/modal-container';
-
-
-
-interface ModalContextValue {
-    open: (modal: ModalOptions) => void;
-    close: (id: string) => void;
-    minimize: (id: string) => void;
-    restore: (id: string) => void;
-    ModalUI: ReactNode;
-    DockUI: ReactNode;
-}
 
 const ModalContext = createContext<ModalContextValue | undefined>(undefined);
 
@@ -59,22 +48,20 @@ export function ModalProvider({ children }: { children: ReactNode }) {
         </>
     );
 
-    const DockUI = (
-        <Docker modals={modals} minimized={minimized} onRestore={restore} />
-    );
+    const DockUI = <Docker modals={modals} minimized={minimized} onRestore={restore} />;
 
-    const value = useMemo(
-        () => ({ open, close, minimize, restore, ModalUI, DockUI }),
-        [modals, openId, minimized]
-    );
+    const value = useMemo(() => ({ open, close, minimize, restore, ModalUI, DockUI }), [modals, openId, minimized]);
 
     return (
-        <ModalContext.Provider value={value}>{children}</ModalContext.Provider>
+        <ModalContext.Provider value={value}>
+            {ModalUI}
+            {children}
+        </ModalContext.Provider>
     );
 }
 
 export function useModal() {
     const ctx = useContext(ModalContext);
-    if (!ctx) throw new Error("useModal must be used within ModalProvider");
+    if (!ctx) throw new Error('useModal must be used within ModalProvider');
     return ctx;
 }

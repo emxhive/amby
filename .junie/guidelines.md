@@ -1,12 +1,6 @@
 # Project Guidelines
     
-This is a placeholder of the project guidelines for Junie.
-Replace this text with any project-level instructions for Junie, e.g.:
+* Do not run tests without my permission
+* Unless in PRODUCTION mode, or there is already more than one existing migration for a particular table,
+or a new migration is explicitly requested for, please always update the initial migration.
 
-* What is the project structure
-* Whether Junie should run tests to check the correctness of the proposed solution
-* How does Junie run tests (once it requires any non-standard approach)
-* Whether Junie should build the project before submitting the result
-* Any code-style related instructions
-
-As an option you can ask Junie to create these guidelines for you.

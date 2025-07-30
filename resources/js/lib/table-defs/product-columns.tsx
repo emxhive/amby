@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 
-export const productColumns: ColumnDef<AdminProduct>[] = [
+export const productColumns: ColumnDef<Product>[] = [
     {
         id: 'index',
         header: '',
@@ -30,7 +30,7 @@ export const productColumns: ColumnDef<AdminProduct>[] = [
                     <span className="text-xs text-muted-foreground">
                         {row.original.variations ? (
                             <>
-                                {row.original.variations} variation{row.original.variations !== 1 && 's'}
+                                {row.original.variations.length} variation{row.original.variations.length > 1 ? '' : 's'}
                             </>
                         ) : (
                             ' '
@@ -44,7 +44,7 @@ export const productColumns: ColumnDef<AdminProduct>[] = [
     {
         accessorKey: 'price',
         header: 'Price',
-        cell: ({ row }) => <span className="text-foreground">{row.original.price.toLocaleString()}</span>,
+        cell: ({ row }) => <span className="text-foreground">{row.original.variations[0]?.price.toLocaleString() ?? 1000}</span>,
     },
     // 2. Sales Column
     {
@@ -52,8 +52,8 @@ export const productColumns: ColumnDef<AdminProduct>[] = [
         header: 'Sales',
         cell: ({ row }) => {
             // Optional chaining/fallbacks
-            const sold = row.original?.sold ?? 100000;
-            const remaining = row.original?.remaining ?? 0;
+            const sold = 100000;
+            const remaining = 0;
             return (
                 <span className="text-xs text-muted-foreground">
                     {sold} sold / {remaining} left

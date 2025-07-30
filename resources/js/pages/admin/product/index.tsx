@@ -1,7 +1,7 @@
 import SmartForm from '@/components/smart-form/smart-form';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
-import { useModal } from '@/hooks/use-modal-system';
+import { useModal } from '@/components/modal-system/use-modal-system';
 import AdminLayout from '@/layouts/admin-layout';
 import { altProducts, Categories, fields } from '@/lib/constants';
 import { routes } from '@/lib/routes';
@@ -9,7 +9,7 @@ import { productColumns } from '@/lib/table-defs/product-columns';
 import { Link, usePage } from '@inertiajs/react';
 
 interface ProductProps {
-    products: PaginatedResponse<AdminProduct>;
+    products: PaginatedResponse<Product>;
     categories: Categories;
 }
 

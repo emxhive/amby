@@ -1,8 +1,8 @@
-import { FieldConfig } from '@/components/smart-form/smart-form';
-
+//@ts-nocheck
+export const volumeUnits = ['ml', 'L', 'g', 'kg', 'pcs'];
 export const works = 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=80&q=80';
 
-export const altProducts: AdminProduct[] = [
+export const altProducts: Product[] = [
     {
         id: 1,
         name: 'Classic Date Syrup',

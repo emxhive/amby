@@ -18,14 +18,7 @@ class VariationBatch extends Model
         'notes'
     ];
 
-    protected array $whitelist = [
-        'id',
-        'product_variation_id',
-        'is_open',
-        'stock',
-        'sold',
-        'notes',
-    ];
+    protected array $whitelist = [];
 
     protected array $blacklist = [];
 

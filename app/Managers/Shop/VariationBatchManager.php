@@ -6,6 +6,7 @@ use App\DTOs\VariationBatchDTO;
 use App\Managers\BaseManager;
 use App\Models\VariationBatch;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Throwable;
 
 class VariationBatchManager extends BaseManager
 {
@@ -15,11 +16,7 @@ class VariationBatchManager extends BaseManager
     }
 
     /**
-     * Store a new variation batch from a DTO.
-     *
-     * @param VariationBatchDTO $dto
-     * @param array|null $relations
-     * @return JsonResource
+     * @throws Throwable
      */
     public function storeFromDTO(VariationBatchDTO $dto, array $relations = null): JsonResource
     {

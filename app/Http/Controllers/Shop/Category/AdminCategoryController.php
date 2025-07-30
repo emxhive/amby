@@ -48,7 +48,7 @@ class AdminCategoryController extends CrudController
         // Load relationships
         $category->load(['parent', 'children', 'products']);
 
-        return Inertia::render(V::A_C_S, $this->wrap($category));
+        return Inertia::render(V::A_C_S, $this->wrap($category, "category"));
     }
 
     /**
@@ -57,7 +57,7 @@ class AdminCategoryController extends CrudController
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
         $category = $this->cStore($request);
-        return redirect()->route(R::A_C_S, ['category' => $category->slug]);
+        return redirect()->route(R::A_C_S, ['category' => $category->id]);
     }
 
     /**
@@ -66,7 +66,7 @@ class AdminCategoryController extends CrudController
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         $category = $this->cUpdate($request, $category);
-        return redirect()->route(R::A_C_S, ['category' => $category->slug]);
+        return redirect()->route(R::A_C_S, ['category' => $category->id]);
     }
 
     /**

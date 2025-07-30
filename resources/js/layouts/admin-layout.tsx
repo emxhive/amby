@@ -16,10 +16,11 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
     return (
         <div className="flex max-h-dvh min-h-dvh">
+
             <Sidebar isOpen={isSidebarOpen} />
             <div className="flex flex-1 flex-col">
                 <Header title={title} onSidebarToggle={toggleSidebar} />
-                <main className="flex-1 overflow-y-auto p-8 pt-0 items-center">{children}</main>
+                <main className="flex-1 overflow-y-auto p-8 pt-0 pb-20">{children}</main>
             </div>
         </div>
     );

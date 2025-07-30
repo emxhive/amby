@@ -12,7 +12,7 @@ class ProductDTO
     public string $status;
 
 
-    public static function fromProductArray(array $productData): self
+    public static function fromArray(array $productData): self
     {
         $dto = new self();
         $dto->id = $productData['id'] ?? null;

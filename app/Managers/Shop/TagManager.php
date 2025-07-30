@@ -12,8 +12,4 @@ class TagManager extends BaseManager
         return Tag::class;
     }
 
-    protected function relations(): array
-    {
-        return ['products'];
-    }
 }

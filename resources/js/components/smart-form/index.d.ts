@@ -1,6 +1,6 @@
 import React from 'react';
 
-type FieldConfig = {
+export type FieldConfig = {
     name: string;
     label?: string;
     type?: keyof typeof defaultComponents;

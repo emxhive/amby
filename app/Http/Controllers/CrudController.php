@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Managers\BaseManager;
@@ -9,7 +10,7 @@ use Throwable;
 
 abstract class CrudController extends Controller
 {
-    abstract protected function manager() : BaseManager;
+    abstract protected function manager(): BaseManager;
 
 
     public function index(Request $request)
@@ -20,10 +21,10 @@ abstract class CrudController extends Controller
     /**
      * @throws Exception|Throwable
      */
-    final public function cStore($request)
+    final public function cStore($request, $relations = null)
     {
         try {
-            return $this->manager()->create($request->validated());
+            return $this->manager()->store($request->validated(), $relations);
         } catch (Exception $e) {
             Log::error('Error creating model: ' . $e->getMessage(), [
                 'request' => $request->validated(),
@@ -66,12 +67,17 @@ abstract class CrudController extends Controller
         }
     }
 
-    protected function wrap($resource, $isList = false): array
+    protected function wrap($resource): array
     {
         return [
-            "resource" => $isList
-                ? $this->manager()->toResourceCollection($resource)
-                : $this->manager()->toResource($resource)
+            $this->manager()->modelName => $this->manager()->toResource($resource)
+        ];
+    }
+
+    protected function wrapList($resources, $key): array
+    {
+        return [
+            $key => $this->manager()->toResourceCollection($resources)
         ];
     }
 }

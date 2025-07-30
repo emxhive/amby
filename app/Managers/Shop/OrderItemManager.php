@@ -12,8 +12,4 @@ class OrderItemManager extends BaseManager
         return OrderItem::class;
     }
 
-    protected function relations(): array
-    {
-        return ['order','product','productVariation'];
-    }
 }

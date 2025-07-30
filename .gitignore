@@ -22,3 +22,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.junie/guidelines.md
+extract_schemas.ps1
+*.txt

@@ -3,6 +3,8 @@
 namespace App\Managers;
 
 use App\Http\Resources\BaseResource;
+use App\Managers\Traits\HasBaseManagerHelpers;
+use App\Services\ImageService;
 use Cache;
 use DB;
 use Illuminate\Database\Eloquent\Model;
@@ -12,46 +14,78 @@ use Throwable;
 
 abstract class BaseManager
 {
+
+    use HasBaseManagerHelpers;
+
     protected bool $isAdmin;
+    public string $modelName;
+    protected string $resource = BaseResource::class;
+
+    protected ?ImageService $imageService = null;
 
     public function __construct(bool $isAdmin = false)
     {
         $this->isAdmin = $isAdmin;
+        $this->modelName = $this->modelName();
+
     }
 
-    abstract protected function model();
+    /**
+     * @return class-string<Model>
+     */
+    abstract protected function model(): string;
 
-    protected string $resource = BaseResource::class;
-
-    protected function relations(): array
-    {
-        return array_keys((new ($this->model()))->getRelationsMap());
-    }
 
     public array $filterable = [];
 
+    protected ?array $cachedRelations = null;
 
-    public function find($id): ?JsonResource
+    final protected function relations(array $relations = null): array
     {
-        // Use cache to store frequently accessed models
-        $cacheKey = $this->model() . ':' . $id;
+        if ($relations !== null) return $relations;
+        if ($this->cachedRelations === null) {
+            $this->cachedRelations = array_keys((new ($this->model()))->getRelationsMap());
+        }
+        return $this->cachedRelations;
+    }
+
+
+    public function list(array $filters = [], int $perPage = 15): ResourceCollection
+    {
+        $hasFilters = !empty($this->filterable)
+            && collect($filters)->keys()->intersect($this->filterable)->isNotEmpty();
+
+        $query = $hasFilters
+            ? $this->filter($filters)
+            : $this->query();
+
+        $items = $query->paginate($perPage);
+        return $this->toResourceCollection($items);
+    }
+
+
+    public function find($id): ?Model
+    {
+        $cacheKey = $this->generateCacheKey($id);
 
         return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($id) {
-            $model = $this->model()::with($this->relations())->find($id);
-            return $model ? $this->toResource($model) : null;
+            return $this->model()::with($this->relations())->find($id);
         });
     }
 
     /**
      * @throws Throwable
      */
-    public function create(array $data): JsonResource
+    public function store(array $data, array $relations = null): JsonResource
     {
-        // Use transaction to ensure data consistency
-        return DB::transaction(function () use ($data) {
-            $model = $this->model()::create($data);
-            return $this->toResource($model);
+
+        $relations = $this->relations($relations);
+        $model = DB::transaction(function () use ($data) {
+            return $this->model()::create($data);
         });
+
+        $model = $model->load($relations);
+        return $this->toResource($model);
     }
 
     /**
@@ -59,24 +93,28 @@ abstract class BaseManager
      */
     public function update(Model $model, array $data): JsonResource
     {
-        // Use transaction to ensure data consistency
+
+//        $this->authorizeAction("update", $model); TODO Add Policy Class
+
         $result = DB::transaction(function () use ($model, $data) {
             $model->fill($data)->save();
+            $model->refresh()->load($this->relations());
             return $this->toResource($model);
         });
 
-        // Invalidate cache for this model
         $this->forgetModelCache($model->id);
 
         return $result;
     }
+
 
     /**
      * @throws Throwable
      */
     public function delete(Model $model): bool
     {
-        // Use transaction to ensure data consistency
+//        $this->authorizeAction("delete", $model); TODO Write policy class
+
         $result = DB::transaction(function () use ($model) {
             return $model->delete();
         });
@@ -87,43 +125,12 @@ abstract class BaseManager
         return $result;
     }
 
-    /**
-     * Forget the cached model
-     */
-    protected function forgetModelCache($id): void
-    {
-        $cacheKey = $this->model() . ':' . $id;
-        Cache::forget($cacheKey);
-    }
-
     public function query(array $relations = null)
     {
         $query = $this->model()::query();
-
-        if ($relations !== null) {
-            $query->with($relations);
-        } else {
-            $query->with($this->relations());
-        }
-
-        return $query;
+        return $query->with($this->relations($relations));
     }
 
-    public function toResource(Model $model): JsonResource
-    {
-        $resourceClass = $this->resource;
-        return (new $resourceClass($model))->withAdmin($this->isAdmin);
-    }
-
-    public function toResourceCollection($resource): ResourceCollection
-    {
-        $collection = $this->resource::collection($resource);
-        $collection->each(function ($resource) {
-            $resource->withAdmin($this->isAdmin);
-        });
-
-        return $collection;
-    }
 
     public function filter(array $filters = [])
     {
@@ -146,20 +153,6 @@ abstract class BaseManager
         }
 
         return $query;
-    }
-
-
-    public function list(array $filters = [], int $perPage = 15): ResourceCollection
-    {
-        $hasFilters = !empty($this->filterable)
-            && collect($filters)->keys()->intersect($this->filterable)->isNotEmpty();
-
-        $query = $hasFilters
-            ? $this->filter($filters)
-            : $this->query();
-
-        $items = $query->paginate($perPage);
-        return $this->toResourceCollection($items);
     }
 
 

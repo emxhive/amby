@@ -29,7 +29,7 @@ class AdminProductController extends CrudController
 
     public function index(Request $request)
     {
-        $products = $this->manager->query(['category', 'tags'])->paginate(15);
+        $products = $this->manager->query(['category', 'tags', "variations"])->paginate(15);
         $categories = Category::all();
 
         return Inertia::render(V::A_P_I,
@@ -59,7 +59,7 @@ class AdminProductController extends CrudController
      */
     public function store(StoreProductRequest $request): RedirectResponse
     {
-        $product = $this->cStore($request);
+        $product = $this->cStore($request, ['variations']);
         return redirect()->route(R::A_P_S, ['product' => $product->slug]);
     }
 

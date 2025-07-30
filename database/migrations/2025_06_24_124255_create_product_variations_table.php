@@ -11,11 +11,11 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
             $table->string('sku')->unique();
-            $table->string('name')->default('Default');
             $table->decimal('price', 10);
-            $table->decimal('weight', 8, 3)->nullable();
-            $table->string('status')->default('active');
-            $table->json('attributes')->nullable(); // e.g., {"volume":"250ml","flavor":"vanilla"}
+            $table->decimal('quantity')->nullable();
+            $table->string('quantity_unit')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->json('attributes')->nullable();
             $table->timestamps();
         });
     }

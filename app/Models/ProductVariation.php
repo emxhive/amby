@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\DTOs\VariationBatchDTO;
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use App\Traits\ModelTrait;
 
 class ProductVariation extends Model
 {
@@ -18,15 +19,16 @@ class ProductVariation extends Model
         'product_id',
         'name',
         'price',
-        'sku'
+        'sku',
+        "quantity",
+        "quantity_unit"
     ];
 
     protected array $whitelist = [
         'id',
-        'product_id',
-        'name',
         'price',
-        'sku'
+        'sku',
+
     ];
 
     protected array $blacklist = [];
@@ -56,7 +58,7 @@ class ProductVariation extends Model
      */
     public function activeBatch(): HasOne
     {
-        return $this->hasOne(VariationBatch::class, 'product_variation_id')->where('is_open', 'true');
+        return $this->hasOne(VariationBatch::class, 'product_variation_id')->where('is_open', true);
     }
 
     /**
@@ -68,8 +70,16 @@ class ProductVariation extends Model
     }
 
     /**
+     * Get the sold count from the active batch.
+     */
+    public function getSoldAttribute()
+    {
+        return $this->activeBatch ? $this->activeBatch->sold : 0;
+    }
+
+    /**
      * Record a sale for this variation.
-     * Decrement stock in the active batch.
+     * Decrement stock and increments sold in the active batch.
      *
      * @param int $quantity The quantity sold
      * @return bool Whether the sale was successful
@@ -83,6 +93,7 @@ class ProductVariation extends Model
         }
 
         $activeBatch->stock -= $quantity;
+        $activeBatch->sold += $quantity;
 
         return $activeBatch->save();
     }
@@ -91,24 +102,24 @@ class ProductVariation extends Model
      * Restock this variation.
      * Increments stock in the active batch.
      *
-     * @param int $quantity The quantity to add
+     * @param int $stock The quantity to add
      * @param string|null $notes Notes about the restocking
      * @return bool Whether the restocking was successful
      */
-    public function restock(int $quantity, ?string $notes = null): bool
+    public function restock(int $stock, ?string $notes = null): bool
     {
         $activeBatch = $this->activeBatch;
 
         if (!$activeBatch) {
             // Create a new batch if none exists
-            return (bool) $this->batches()->create([
-                'is_open' => 'true',
-                'stock' => $quantity,
+            return (bool)$this->batches()->create([
+                'is_open' => true,
+                'stock' => $stock,
                 'notes' => $notes ?? 'Restock',
             ]);
         }
 
-        $activeBatch->stock += $quantity;
+        $activeBatch->stock = $stock;
 
         if ($notes) {
             $activeBatch->notes = $activeBatch->notes
@@ -119,28 +130,15 @@ class ProductVariation extends Model
         return $activeBatch->save();
     }
 
-    /**
-     * Create a new batch for this variation.
-     * Closes the current active batch and creates a new one.
-     *
-     * @param int $stock Initial stock for the new batch
-     * @param string|null $notes Notes for the new batch
-     * @return VariationBatch|null The new batch or null if creation failed
-     */
-    public function createNewBatch(int $stock, ?string $notes = null): ?VariationBatch
+    public function createNewBatch(VariationBatchDTO $dto): ?VariationBatch
     {
-        // Close the current active batch if it exists
         $activeBatch = $this->activeBatch;
         if ($activeBatch) {
-            $activeBatch->is_open = 'false';
+            $activeBatch->is_open = false;
             $activeBatch->save();
         }
 
-        // Create a new batch
-        return $this->batches()->create([
-            'is_open' => 'true',
-            'stock' => $stock,
-            'notes' => $notes ?? 'New production batch',
-        ]);
+        return $this->batches()->create($dto->toArray());
     }
+
 }

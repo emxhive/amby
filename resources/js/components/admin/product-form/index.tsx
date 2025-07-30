@@ -1,60 +1,140 @@
+import MainSection from '@/components/admin/product-form/main-section';
+import MetaSection from '@/components/admin/product-form/meta-section';
+import ThumbnailSection from '@/components/admin/product-form/thumbnail-section';
+import VariationsSection from '@/components/admin/product-form/variations-section';
+import { PageHeader } from '@/components/page-header';
 import AdminLayout from '@/layouts/admin-layout';
-import { useForm } from '@inertiajs/react';
-import ProductFormInfoSection from './product-form-info-section';
-import ProductFormVariationsSection from './product-form-variations-section';
-import ProductFormThumbnailSection from './product-form-thumbnail-section';
-import ProductFormStatusSection from './product-form-status-section';
-import ProductFormCategorySection from './product-form-category-section';
-import { Button } from '@/components/ui/button';
+import { volumeUnits } from '@/lib/constants';
+import { cn } from '@/lib/utils';
+import { useForm, usePage } from '@inertiajs/react';
 
 interface ProductFormProps {
-    mode: 'create' | 'edit';
-    initialData: ProductFormData;
-    categories: Category[];
-    onSubmit: (data: ProductFormData) => void;
+    extFormInit?: ProductFormData;
+    routeStr: string;
+    submitOptions?: {
+        onSuccess?: () => void;
+        onError?: () => void;
+    };
 }
 
-export default function ProductForm({ mode, initialData, categories, onSubmit }: ProductFormProps) {
-    // @ts-ignore
-    const { data, setData, errors, processing } = useForm<ProductFormData>(initialData);
+export default function ProductForm({ extFormInit, routeStr, submitOptions }: ProductFormProps) {
+    console.log(usePage().props);
+    const { categories } = usePage().props as unknown as CreateProductProps;
 
-    // Variation handlers here (can be passed to section)
-    const addVariation = () => { /* ... */ };
-    const removeVariation = (idx: number) => { /* ... */ };
-    const setVariation = (idx: number, key: keyof FormVariation, value: string) => { /* ... */ };
+    const isCreate = extFormInit === undefined;
+
+    const formInt = {
+        name: '',
+        status: 'active',
+        image: null as File | null,
+        category_id: categories.length > 0 ? String(categories[0].id) : '',
+        description: '',
+        variations: [{ sku: '', stock: '', quantity: '', quantity_unit: volumeUnits[0], price: '' }],
+    } as ProductFormData;
+
+    if (!isCreate) {
+        Object.keys(formInt).forEach((key) => {
+            // @ts-ignore
+            if (extFormInit[key] !== undefined) {
+                // @ts-ignore
+                formInt[key] = extFormInit[key];
+            }
+        });
+    }
+
+    // @ts-ignore
+    const { data, setData, post, put, processing, errors } = useForm<ProductFormData>(formInt);
+
+    const addVariation = () =>
+        setData('variations', [
+            ...data.variations,
+            {
+                sku: '',
+                stock: '',
+                quantity: '',
+                quantity_unit: volumeUnits[0],
+                price: '',
+            },
+        ]);
+    const removeVariation = (idx: number) => {
+        if (data.variations.length > 1) {
+            setData(
+                'variations',
+                data.variations.filter((_, i) => i !== idx),
+            );
+        }
+    };
+    const setVariation = (idx: number, key: keyof FormVariation, value: string) => {
+        const updated = data.variations.map((v, i) => (i === idx ? { ...v, [key]: value } : v));
+        setData('variations', updated);
+    };
+
+    // Helper to grab nested errors for variations (Inertia uses dot notation)
+    const getVariationError = (idx: number, field: string) => {
+        const key = `variations.${idx}.${field}`;
+        // @ts-ignore
+        return errors && errors[key];
+    };
+
+    const submit = isCreate ? post : put;
 
     return (
         <AdminLayout>
+            <PageHeader
+                title={isCreate ? 'Add Product' : 'Update Product'}
+                onAction={() => submit(routeStr, submitOptions)}
+                actionLabel={isCreate ? 'Save' : 'Update'}
+                actionVariant="outline"
+            />
             <form
-                onSubmit={e => {
-                    e.preventDefault();
-                    onSubmit(data);
-                }}
+                className={cn(
+                    'grid gap-8',
+                    '[grid-template-columns:1fr_1fr]',
+                    "[grid-template-areas:'thumb_meta''main_main''vars_vars']",
+                    'lg:[grid-template-columns:1fr_1fr_350px]',
+                    "lg:[grid-template-areas:'main_main_thumb''main_main_meta''vars_vars_vars']",
+                )}
                 encType="multipart/form-data"
-                className="flex flex-col gap-6 lg:flex-row"
+                onSubmit={(e: any) => {
+                    e.preventDefault();
+                    submit(routeStr, submitOptions);
+                }}
             >
-                <div className="flex-1 space-y-6">
-                    <ProductFormInfoSection data={data} setData={setData} errors={errors} />
-                    <ProductFormVariationsSection
-                        variations={data.variations}
-                        setVariation={setVariation}
-                        addVariation={addVariation}
-                        removeVariation={removeVariation}
-                        errors={errors}
-                        variation_label={data.variation_label}
-                    />
-                </div>
-                <div className="flex w-full flex-col gap-6 lg:w-100">
-                    <ProductFormThumbnailSection data={data} setData={setData} errors={errors} />
-                    <ProductFormStatusSection data={data} setData={setData} errors={errors} />
-                    <ProductFormCategorySection data={data} setData={setData} errors={errors} categories={categories} />
-                </div>
-                <div className="mt-4 flex justify-end gap-2 w-full">
-                    <Button type="submit" disabled={processing}>
-                        {mode === 'create' ? 'Save Product' : 'Update Product'}
-                    </Button>
-                </div>
+                <ThumbnailSection className={'[grid-area:thumb]'} data={data} setData={setData} errors={errors} />
+                <MetaSection className={'[grid-area:meta]'} data={data} setData={setData} errors={errors} categories={categories} />
+
+                <MainSection className={'[grid-area:main]'} data={data} setData={setData} errors={errors} />
+                <VariationsSection
+                    className={'[grid-area:vars]'}
+                    data={data}
+                    setVariation={setVariation}
+                    addVariation={addVariation}
+                    removeVariation={removeVariation}
+                    getVariationError={getVariationError}
+                    volumeUnits={volumeUnits}
+                />
             </form>
         </AdminLayout>
     );
+}
+
+interface FormVariation {
+    sku: string;
+    stock: string;
+    quantity: string;
+    quantity_unit: string;
+    price: string;
+}
+
+interface CreateProductProps {
+    categories: Category[];
+}
+
+interface ProductFormData {
+    name: string;
+    status: 'active' | 'inactive';
+    image: File | null;
+    category_id: string;
+    description: string;
+    variations: FormVariation[];
 }

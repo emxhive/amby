@@ -1,4 +1,4 @@
-interface AdminProduct {
+interface Product {
     // remaining?: number;
     // sold?: number;
     id: number;
@@ -63,11 +63,12 @@ interface PaginatedResponse<T> {
     };
 }
 
-interface ModalOptions {
-    id: string;
-    title: string;
-    content: React.ReactNode;
-    minimizable?: boolean;
-    className?: string;
-    width?: string;
+
+
+interface Category {
+    id: number;
+    name: string;
+    parent_id: number | null;
+    is_default: boolean;
+
 }

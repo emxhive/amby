@@ -2,12 +2,11 @@
 
 namespace App\Models;
 
-use Database\Factories\CategoryFactory;
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Traits\ModelTrait;
 
 class Category extends Model
 {
@@ -58,22 +57,5 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');
     }
 
-    /**
-     * Get the default category ID.
-     *
-     * @return int|null The ID of the default category, or null if no default category exists
-     */
-    public static function getDefaultId(): ?int
-    {
-        // Get the category marked as default
-        $defaultCategory = self::where('is_default', true)->first();
-
-        // If no default category is found, fall back to the first category
-        if (!$defaultCategory) {
-            $defaultCategory = self::first();
-        }
-
-        return $defaultCategory?->id;
-    }
 
 }

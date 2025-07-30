@@ -45,8 +45,8 @@ class BaseResource extends JsonResource
                     $data[$relation] = $resourceClass::collection($related)
                         ->each(function ($resource) {
                             $resource->withAdmin($this->isAdmin);
-                        })
-                        ->toArray($request);
+                        });
+//                        ->toArray($request);
                 } elseif ($related) {
                     $data[$relation] = (new $resourceClass($related))->withAdmin($this->isAdmin);
                 } else {

@@ -12,8 +12,4 @@ class AddressManager extends BaseManager
         return Address::class;
     }
 
-    protected function relations(): array
-    {
-        return ['user'];
-    }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Managers\Shop;
 
-use App\Models\CartItem;
 use App\Managers\BaseManager;
+use App\Models\CartItem;
 
 class CartItemManager extends BaseManager
 {
@@ -12,8 +12,5 @@ class CartItemManager extends BaseManager
         return CartItem::class;
     }
 
-    protected function relations(): array
-    {
-        return ['cart','product','productVariation'];
-    }
+
 }
