@@ -135,10 +135,12 @@ class ProductVariation extends Model
         $activeBatch = $this->activeBatch;
         if ($activeBatch) {
             $activeBatch->is_open = false;
+            $activeBatch->closed_at = now();
             $activeBatch->save();
         }
 
         return $this->batches()->create($dto->toArray());
     }
+
 
 }

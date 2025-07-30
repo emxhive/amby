@@ -5,7 +5,6 @@ namespace App\DTOs;
 class ProductVariationDTO
 {
     public ?int $id;
-//    public ?int $product_id;
     public string $sku;
     public float $price;
     public ?float $quantity;
@@ -34,7 +33,6 @@ class ProductVariationDTO
 
 
             $dto->batch = VariationBatchDTO::fromArray([
-                "pv_id" => $dto->id,
                 "is_open" => $variation["is_new_batch"] ?? false,
                 "stock" => $dto->stock ?? 0,
                 'notes' => $variation['notes'] ?? null,
