@@ -22,7 +22,6 @@ class ProductVariationDTO
             $dto = new self();
 
             $dto->id = $variation['id'] ?? null;
-//            $dto->product_id = $variation['product_id'] ?? $productData['id'] ?? null;
             $dto->sku = $variation['sku'] ?? '';
             $dto->price = $variation['price'] ?? $productData['price'] ?? 0;
 

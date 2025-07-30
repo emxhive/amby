@@ -40,13 +40,9 @@ class ProductManager extends BaseManager
     public function store(array $data, array $relations = null): JsonResource
     {
         try {
-            // 1. Use your imageService to upload (before DB transaction)
+
             $data = $this->imageService()->upload($data);
 
-            // Save the path for cleanup if needed
-            $uploadedPath = $data['image'] ?? null;
-
-            // 2. Transaction: create product, variations, batches
             $product = DB::transaction(function () use ($data, $relations) {
                 $productDTO = ProductDTO::fromArray($data);
                 $product = Product::create($productDTO->toArray());
@@ -63,13 +59,13 @@ class ProductManager extends BaseManager
                 return $product;
             });
 
-            // 3. Return as a resource
+
             return $this->toResource($product);
 
         } catch (Throwable $e) {
 
-            if (!empty($uploadedPath)) {
-                Storage::delete($uploadedPath);
+            if (!empty($data['image'])) {
+                Storage::delete($data['image']);
             }
             throw $e;
         }

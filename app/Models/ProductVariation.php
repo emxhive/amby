@@ -39,7 +39,6 @@ class ProductVariation extends Model
         'activeBatch' => []
     ];
 
-
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
