@@ -7,6 +7,7 @@ use App\DTOs\ProductVariationDTO;
 use App\Managers\BaseManager;
 use App\Models\Product;
 use DB;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Storage;
 use Throwable;
@@ -55,6 +56,57 @@ class ProductManager extends BaseManager
                 }
 
                 $product->load($this->relations($relations));
+
+                return $product;
+            });
+
+
+            return $this->toResource($product);
+
+        } catch (Throwable $e) {
+
+            if (!empty($data['image'])) {
+                Storage::delete($data['image']);
+            }
+            throw $e;
+        }
+    }
+
+
+    public function update(Product|Model $product, array $data): JsonResource
+    {
+        try {
+
+            $data = $this->imageService()->upload($data);
+
+            $product = DB::transaction(function () use ($data, $product) {
+
+                $variations = $product->variations();
+                $existingVarIds = $variations->pluck("id");
+                $incomingVarIds = [];
+                $productDTO = ProductDTO::fromArray($data);
+                $product->update($productDTO->toArray());
+
+                $variationDTOs = ProductVariationDTO::fromProductArray($data);
+                $pvm = new ProductVariationManager();
+
+                foreach ($variationDTOs as $variationDTO) {
+                    if ($variationDTO->id) {
+                        $pvm->updateFromDTO($variationDTO, $product);
+                        $incomingVarIds[] = $variationDTO->id;
+                    } else {
+                        $variation = $pvm->storeFromDTO($variationDTO, $product);
+                        $incomingVarIds[] = $variation->id;
+
+                    }
+
+                }
+                $toDelete = array_diff($existingVarIds, $incomingVarIds);
+                if (!empty($toDelete)) {
+                    $variations->whereIn("id", $toDelete)->delete();
+                }
+
+                $product->load("variations");
 
                 return $product;
             });
