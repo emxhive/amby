@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="React" pattern="file[amby]:resources/css//*||file[amby]:resources/js//*" />
+</component>

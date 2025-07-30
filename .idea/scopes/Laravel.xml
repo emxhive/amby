@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Laravel" pattern="(file:bootstrap/*||file:config/*||file:database/*||file:routes/*||file:lang/*||file:composer.json||file:app//*)&amp;&amp;!file:*/.gitignore||file[amby]:database//*" />
+</component>

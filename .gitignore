@@ -18,11 +18,25 @@ npm-debug.log
 yarn-error.log
 /auth.json
 /.fleet
-/.idea
+
+
+# IDE specific files
+# Ignore everything in .idea
+/.idea/*
+
+# But allow these specific files
+!/.idea/scopes/
+!/.idea/scopes/**
+!/.idea/codeStyles/
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+!/.idea/tailwindcss.xml
+!/.idea/vcs.xml
+
+
 /.nova
 /.vscode
 /.zed
-.junie/guidelines.md
 .junie/guidelines.md
 extract_schemas.ps1
 *.txt
