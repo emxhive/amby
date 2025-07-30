@@ -23,5 +23,6 @@ yarn-error.log
 /.vscode
 /.zed
 .junie/guidelines.md
+.junie/guidelines.md
 extract_schemas.ps1
 *.txt
