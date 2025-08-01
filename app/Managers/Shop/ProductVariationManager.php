@@ -23,12 +23,22 @@ class ProductVariationManager extends BaseManager
         if ($dto->batch) {
             $variation->createNewBatch($dto->batch);
         }
-
         return $variation;
     }
 
-    public function updateFromDTO(mixed $variationDTO, Product $product)
+    public function updateFromDTO(ProductVariationDTO $dto, ProductVariation $variation): void
     {
+
+        $variation->update($dto->toArray());
+        $batch = $dto->batch;
+        if ($batch) {
+            if ($batch->is_open) {
+                $variation->createNewBatch($batch);;
+            } else {
+                $variation->restock($batch);
+            }
+
+        }
 
     }
 

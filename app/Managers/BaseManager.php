@@ -8,7 +8,6 @@ use App\Services\ImageService;
 use Cache;
 use DB;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Throwable;
 
@@ -76,7 +75,7 @@ abstract class BaseManager
     /**
      * @throws Throwable
      */
-    public function store(array $data, array $relations = null): JsonResource
+    public function store(array $data, array $relations = null): Model
     {
 
         $relations = $this->relations($relations);
@@ -84,27 +83,27 @@ abstract class BaseManager
             return $this->model()::create($data);
         });
 
-        $model = $model->load($relations);
-        return $this->toResource($model);
+        return $model->load($relations);
+
     }
 
     /**
      * @throws Throwable
      */
-    public function update(Model $model, array $data): JsonResource
+    public function update(Model $model, array $data): Model
     {
 
 //        $this->authorizeAction("update", $model); TODO Add Policy Class
-
-        $result = DB::transaction(function () use ($model, $data) {
-            $model->fill($data)->save();
-            $model->refresh()->load($this->relations());
-            return $this->toResource($model);
-        });
-
         $this->forgetModelCache($model->id);
 
-        return $result;
+
+        return DB::transaction(function () use ($model, $data) {
+            $model->fill($data)->save();
+            return $model->refresh()->load($this->relations());
+
+        });
+
+
     }
 
 
@@ -115,14 +114,13 @@ abstract class BaseManager
     {
 //        $this->authorizeAction("delete", $model); TODO Write policy class
 
-        $result = DB::transaction(function () use ($model) {
+        $this->forgetModelCache($model->id);
+
+        return DB::transaction(function () use ($model) {
             return $model->delete();
         });
 
-        // Invalidate cache for this model
-        $this->forgetModelCache($model->id);
 
-        return $result;
     }
 
     public function query(array $relations = null)

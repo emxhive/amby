@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Validation\ValidationException;
 
 class ProductVariation extends Model
 {
@@ -97,35 +98,18 @@ class ProductVariation extends Model
         return $activeBatch->save();
     }
 
-    /**
-     * Restock this variation.
-     * Increments stock in the active batch.
-     *
-     * @param int $stock The quantity to add
-     * @param string|null $notes Notes about the restocking
-     * @return bool Whether the restocking was successful
-     */
-    public function restock(int $stock, ?string $notes = null): bool
+
+    public function restock(VariationBatchDTO $dto): bool
     {
         $activeBatch = $this->activeBatch;
 
         if (!$activeBatch) {
-            // Create a new batch if none exists
-            return (bool)$this->batches()->create([
-                'is_open' => true,
-                'stock' => $stock,
-                'notes' => $notes ?? 'Restock',
+            throw ValidationException::withMessages(["restock" => "No active batch for this variation.",
+                "level" => "system|critical"
             ]);
         }
 
-        $activeBatch->stock = $stock;
-
-        if ($notes) {
-            $activeBatch->notes = $activeBatch->notes
-                ? $activeBatch->notes . "\n" . $notes
-                : $notes;
-        }
-
+        $activeBatch->stock = $dto->stock;
         return $activeBatch->save();
     }
 

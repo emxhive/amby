@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use JetBrains\PhpStorm\NoReturn;
 use Throwable;
 
 class AdminCategoryController extends CrudController
@@ -28,6 +29,8 @@ class AdminCategoryController extends CrudController
     public function index(Request $request)
     {
         $categories = $this->manager->query(['parent', 'children'])->paginate(15);
+
+
 
         return Inertia::render(V::A_C_I,
             [
@@ -54,10 +57,10 @@ class AdminCategoryController extends CrudController
     /**
      * @throws Throwable
      */
-    public function store(StoreCategoryRequest $request): RedirectResponse
+    #[NoReturn] public function store(StoreCategoryRequest $request)
     {
         $category = $this->cStore($request);
-        return redirect()->route(R::A_C_S, ['category' => $category->id]);
+//        return redirect()->route(R::A_C_S, ['category' => $category->id]);
     }
 
     /**

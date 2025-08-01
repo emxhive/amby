@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/sonner';
 import { Header } from '@/layouts/components/header';
 import Sidebar from '@/layouts/components/sidebar';
 import { ReactNode, useState } from 'react';
@@ -16,7 +17,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
     return (
         <div className="flex max-h-dvh min-h-dvh">
-
+            <Toaster position={'top-right'} toastOptions={{ duration: 5000 }} />
             <Sidebar isOpen={isSidebarOpen} />
             <div className="flex flex-1 flex-col">
                 <Header title={title} onSidebarToggle={toggleSidebar} />

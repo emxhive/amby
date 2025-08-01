@@ -7,8 +7,8 @@ use App\DTOs\ProductVariationDTO;
 use App\Managers\BaseManager;
 use App\Models\Product;
 use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Storage;
 use Throwable;
 
@@ -38,13 +38,13 @@ class ProductManager extends BaseManager
         return $query;
     }
 
-    public function store(array $data, array $relations = null): JsonResource
+    public function store(array $data, array $relations = null): Model
     {
         try {
 
             $data = $this->imageService()->upload($data);
 
-            $product = DB::transaction(function () use ($data, $relations) {
+            return DB::transaction(function () use ($data, $relations) {
                 $productDTO = ProductDTO::fromArray($data);
                 $product = Product::create($productDTO->toArray());
 
@@ -61,8 +61,6 @@ class ProductManager extends BaseManager
             });
 
 
-            return $this->toResource($product);
-
         } catch (Throwable $e) {
 
             if (!empty($data['image'])) {
@@ -73,49 +71,57 @@ class ProductManager extends BaseManager
     }
 
 
-    public function update(Product|Model $product, array $data): JsonResource
+    /**
+     * @param Product $model
+     * @throws Throwable
+     */
+    public function update(Model $model, array $data): Model
     {
         try {
-
             $data = $this->imageService()->upload($data);
 
-            $product = DB::transaction(function () use ($data, $product) {
+            return DB::transaction(function () use ($data, $model) {
 
-                $variations = $product->variations();
-                $existingVarIds = $variations->pluck("id");
-                $incomingVarIds = [];
                 $productDTO = ProductDTO::fromArray($data);
-                $product->update($productDTO->toArray());
+                $model->update($productDTO->toArray());
 
                 $variationDTOs = ProductVariationDTO::fromProductArray($data);
                 $pvm = new ProductVariationManager();
 
+
+                $variations = $model->variations->keyBy('id');
+                $existingVarIds = $variations->keys()->all();
+
+                $incomingVarIds = [];
+
                 foreach ($variationDTOs as $variationDTO) {
                     if ($variationDTO->id) {
-                        $pvm->updateFromDTO($variationDTO, $product);
+                        $variation = $variations->get($variationDTO->id);
+                        if (!$variation) {
+                            throw new Exception("Variation ID {$variationDTO->id} not found for update.");
+                        }
+                        $pvm->updateFromDTO($variationDTO, $variation);
                         $incomingVarIds[] = $variationDTO->id;
                     } else {
-                        $variation = $pvm->storeFromDTO($variationDTO, $product);
+                        $variation = $pvm->storeFromDTO($variationDTO, $model);
                         $incomingVarIds[] = $variation->id;
-
                     }
-
                 }
+
+                // Only in-memory logic, only ONE initial DB fetch, delete with DB call if needed
                 $toDelete = array_diff($existingVarIds, $incomingVarIds);
                 if (!empty($toDelete)) {
-                    $variations->whereIn("id", $toDelete)->delete();
+                    $model->variations()->whereIn('id', $toDelete)->delete();
                 }
 
-                $product->load("variations");
+                // Reload model variations for fresh resource output (optional)
+                $model->load('variations');
 
-                return $product;
+                return $model;
             });
 
 
-            return $this->toResource($product);
-
         } catch (Throwable $e) {
-
             if (!empty($data['image'])) {
                 Storage::delete($data['image']);
             }

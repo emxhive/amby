@@ -24,6 +24,7 @@ export default function ProductForm({ extFormInit, routeStr, submitOptions }: Pr
     const isCreate = extFormInit === undefined;
 
     const formInt = {
+        id: null,
         name: '',
         status: 'active',
         image: null as File | null,
@@ -116,25 +117,4 @@ export default function ProductForm({ extFormInit, routeStr, submitOptions }: Pr
             </form>
         </AdminLayout>
     );
-}
-
-interface FormVariation {
-    sku: string;
-    stock: string;
-    quantity: string;
-    quantity_unit: string;
-    price: string;
-}
-
-interface CreateProductProps {
-    categories: Category[];
-}
-
-interface ProductFormData {
-    name: string;
-    status: 'active' | 'inactive';
-    image: File | null;
-    category_id: string;
-    description: string;
-    variations: FormVariation[];
 }

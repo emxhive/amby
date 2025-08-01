@@ -28,7 +28,7 @@ export function PageHeader({ title, onAction, actionLabel = 'Save', actionVarian
                 {actions ? (
                     actions // If actions provided, use them
                 ) : (
-                    <Button className="h-8 px-5" variant={actionVariant} onClick={onAction}>
+                    <Button className="h-8 w-28 px-5" variant={actionVariant} onClick={onAction}>
                         {actionLabel}
                     </Button>
                 )}

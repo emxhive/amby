@@ -3,7 +3,10 @@ import { FormField } from '@/components/form-field';
 import { useModal } from '@/components/modal-system/use-modal-system';
 import { SectionCard } from '@/components/section-card';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { PC_ADD_CATEGORY } from '@/lib/modal-ids';
+import { router } from '@inertiajs/react';
 import { PlusSquare } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface Props {
     data: ProductFormData;
@@ -32,17 +35,21 @@ export default function MetaSection({ data, setData, errors, categories, classNa
                 error={errors.category_id}
                 rightAction={
                     <PlusSquare
-                        className="cursor-pointer text-primary/50 h-5 w-5"
+                        className="h-5 w-5 cursor-pointer text-primary/50"
                         onClick={() =>
                             open({
-                                id: 'category-manager',
+                                id: PC_ADD_CATEGORY,
                                 title: 'Add Category',
                                 content: (
                                     <CategoryManager
+                                        // useSubDialog={useSubDialog}
                                         categories={categories}
-                                        onClose={() => close('category-manager')}
+                                        onClose={() => {
+                                            close(PC_ADD_CATEGORY);
+                                        }}
                                         onSuccess={() => {
-                                            // Optional: Inertia.reload({ only: ['categories'] });
+                                            toast('Category Added');
+                                            router.reload({ only: ['categories'] });
                                         }}
                                     />
                                 ),
