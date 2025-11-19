@@ -2,7 +2,7 @@ import { ProductCard } from '@/components/shop/product-card';
 import { routes } from '@/lib/routes';
 import { pi } from '@/lib/utils';
 import { Link } from '@inertiajs/react';
-import { featuredProducts } from '@/lib/constants';
+import { featuredProducts } from '@/mocks/mockProducts';
 
 
 export function TopPicks() {

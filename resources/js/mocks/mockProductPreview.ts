@@ -1,5 +1,5 @@
-import { pi } from '@/lib/utils';
 import { ProductPreview } from '@/components/shop/product/types/show.types';
+import { pi } from '@/lib/utils';
 
 export const mockFilters = [
     {

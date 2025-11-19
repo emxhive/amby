@@ -3,6 +3,8 @@ interface Product {
     name: string;
     slug: string;
     status: string;
+    price?: number;
+    weight?: string | number | null;
     image?: string | null;
     category_id?: number;
     category?: {
@@ -21,6 +23,7 @@ interface ProductVariation {
     price: number;
     sku?: string;
     is_active?: boolean;
+    name?: string;
     quantity: number;
     quantity_unit: string;
     activeBatch?: VariationBatch;

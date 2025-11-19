@@ -4,7 +4,7 @@ import HeroTextSection from '@/components/shop/hero-left';
 import ProductListSection from '@/components/shop/product-list-section';
 import { TopPicks } from '@/components/shop/top-picks';
 import ShopLayout from '@/layouts/shop-layout';
-import { products } from '@/lib/constants';
+import { products } from '@/mocks/mockProducts';
 import { pi } from '@/lib/utils';
 import React from 'react';
 

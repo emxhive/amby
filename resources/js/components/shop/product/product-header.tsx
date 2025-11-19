@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { Button } from '@/components/ui/button';
 import { collapseBreadcrumbs, makeBreadcrumbs } from '@/lib/utils';
-import { mockCategoryTrail } from '@/components/shop/product/types/mock';
+import { mockCategoryTrail } from '@/mocks/mockProductPreview';
 import { Heart, Share2, X } from 'lucide-react';
 import React from 'react';
 

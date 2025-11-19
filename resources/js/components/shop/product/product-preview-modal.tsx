@@ -1,6 +1,6 @@
 // product-preview-modal.tsx (updated usage)
 'use client';
-import { mockProductPreview } from '@/components/shop/product/types/mock';
+import { mockProductPreview } from '@/mocks/mockProductPreview';
 import { useMemo, useState } from 'react';
 import { ProductActions } from './product-actions';
 import { ProductHeader } from './product-header';
