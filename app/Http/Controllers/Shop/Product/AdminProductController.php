@@ -29,13 +29,9 @@ class AdminProductController extends CrudController
 
     public function index(Request $request)
     {
-        $products = $this->manager->query(['category', 'tags', "variations"])->paginate(15);
-        $categories = Category::all();
+        $products = $this->manager->query(["variations"])->paginate(15);
 
-        return Inertia::render(V::A_P_I,
-            [
-                "products" => $this->manager->toResourceCollection($products)
-            ]);
+        return Inertia::render(V::A_P_I, $this->wrapList($products, "products"));
     }
 
     public function create(): Response
@@ -46,11 +42,20 @@ class AdminProductController extends CrudController
         ]);
     }
 
+
+    public function edit(Product $product): Response
+    {
+        $categories = Category::all();
+        return Inertia::render(V::A_P_E, [
+            "product" => $this->manager->toResource($product->load("variations.activeBatch")),
+            "categories" => $this->manager->toResourceCollection($categories),
+        ]);
+    }
+
     public function show(Product $product): Response
     {
         // For the show view, we need more detailed information including variations
         $product->load(['category', 'tags', 'variations']);
-
         return Inertia::render(V::A_P_S, $this->wrap($product));
     }
 
@@ -60,7 +65,7 @@ class AdminProductController extends CrudController
     public function store(StoreProductRequest $request): RedirectResponse
     {
         $product = $this->cStore($request, ['variations']);
-        return redirect()->route(R::A_P_S, ['product' => $product->slug]);
+        return redirect()->route(R::A_P_I, ['product' => $product->slug]);
     }
 
     /**
@@ -69,7 +74,7 @@ class AdminProductController extends CrudController
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
         $product = $this->cUpdate($request, $product);
-        return redirect()->route(R::A_P_S, ['product' => $product->slug]);
+        return redirect()->route(R::A_P_I, ['product' => $product->slug]);
     }
 
     /**
@@ -81,4 +86,13 @@ class AdminProductController extends CrudController
         return redirect()->route(R::A_P_I);
     }
 
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+        ]);
+
+        $path = $this->manager()->imageService()->uploadFromRequest($request);
+        return response()->json(['path' => $path]);
+    }
 }

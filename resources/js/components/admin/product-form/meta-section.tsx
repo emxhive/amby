@@ -1,9 +1,10 @@
 import { CategoryManager } from '@/components/admin/add-category';
+import { CategorySelectView } from '@/components/category-select-view';
 import { FormField } from '@/components/form-field';
-import { useModal } from '@/components/modal-system/use-modal-system';
+import { useModal } from '@/components/mx/modal-system/use-modal-system';
 import { SectionCard } from '@/components/section-card';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
-import { PC_ADD_CATEGORY } from '@/lib/modal-ids';
+import { PRODUCT_CREATE__ADD_CATEGORY } from '@/lib/modal-ids';
 import { router } from '@inertiajs/react';
 import { PlusSquare } from 'lucide-react';
 import { toast } from 'sonner';
@@ -18,6 +19,7 @@ interface Props {
 
 export default function MetaSection({ data, setData, errors, categories, className }: Props) {
     const { open, close } = useModal();
+
 
     return (
         <SectionCard className={className}>
@@ -36,16 +38,16 @@ export default function MetaSection({ data, setData, errors, categories, classNa
                 rightAction={
                     <PlusSquare
                         className="h-5 w-5 cursor-pointer text-primary/50"
-                        onClick={() =>
+                        onClick={() => {
                             open({
-                                id: PC_ADD_CATEGORY,
+                                id: PRODUCT_CREATE__ADD_CATEGORY,
+                                description: 'Create a new product category',
                                 title: 'Add Category',
                                 content: (
                                     <CategoryManager
-                                        // useSubDialog={useSubDialog}
                                         categories={categories}
                                         onClose={() => {
-                                            close(PC_ADD_CATEGORY);
+                                            close(PRODUCT_CREATE__ADD_CATEGORY);
                                         }}
                                         onSuccess={() => {
                                             toast('Category Added');
@@ -53,25 +55,12 @@ export default function MetaSection({ data, setData, errors, categories, classNa
                                         }}
                                     />
                                 ),
-                                width: '',
-                                minimizable: true,
-                            })
-                        }
+                            });
+                        }}
                     />
                 }
             >
-                <Select value={data.category_id} onValueChange={(val) => setData('category_id', val)}>
-                    <SelectTrigger className="mt-1">
-                        {categories.find((c) => String(c.id) === data.category_id)?.name || 'Select category'}
-                    </SelectTrigger>
-                    <SelectContent>
-                        {categories.map((cat) => (
-                            <SelectItem key={cat.id} value={String(cat.id)}>
-                                {cat.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
+                <CategorySelectView categories={categories} value={data.category_id} onValueChange={(val) => setData('category_id', val)} />
             </FormField>
         </SectionCard>
     );

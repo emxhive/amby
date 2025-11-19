@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { Textarea } from '@/components/ui/textarea';
 import { useForm } from '@inertiajs/react';
 import React from 'react';
+import { routes } from '@/lib/routes';
 
 interface CategoryManagerProps {
     categories: Category[];
@@ -24,7 +25,7 @@ export function CategoryManager({ categories, onClose, onSuccess }: CategoryMana
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post(route('admin.categories.store'), {
+        post(route(routes.admin.categories.store), {
             onSuccess: () => {
                 reset();
                 onSuccess?.();

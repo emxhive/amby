@@ -1,4 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PropertiesComponent">{}</component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ea0477c8-d5b6-490e-bf5d-304f3d03d9c8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/laravel-idea.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/scopes/React.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/components/category-select-view.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/js/components/utils.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Constants/InertiaViews.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Constants/InertiaViews.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/DTOs/ProductDTO.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/DTOs/ProductDTO.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Http/Controllers/Shop/Product/AdminProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Controllers/Shop/Product/AdminProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Http/Requests/Shop/StoreProductRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Requests/Shop/StoreProductRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Http/Requests/Shop/UpdateProductRequest.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Requests/Shop/UpdateProductRequest.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Http/Resources/BaseResource.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Http/Resources/BaseResource.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Managers/Shop/CartItemManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Managers/Shop/CartItemManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Managers/Shop/ProductManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Managers/Shop/ProductManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Managers/Shop/ProductVariationManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Managers/Shop/ProductVariationManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Managers/Shop/TagManager.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Managers/Shop/TagManager.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Models/Attributes/HasProductAttributes.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Models/Product.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Models/Product.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../app/Models/ProductVariation.php" beforeDir="false" afterPath="$PROJECT_DIR$/../app/Models/ProductVariation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/add-category.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/add-category.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/product-form/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/product-form/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/product-form/main-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/product-form/main-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/product-form/meta-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/product-form/meta-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/product-form/thumbnail-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/product-form/thumbnail-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/admin/product-form/variations-section.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/admin/product-form/variations-section.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/form-field.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/form-field.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/modal-system/components/docker.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/modal-system/components/docker.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/modal-system/components/modal-container.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/modal-system/components/modal-container.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/modal-system/use-modal-system.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/modal-system/use-modal-system.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/components/page-header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/components/page-header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/hooks/use-ajax-form.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/lib/modal-ids.ts" beforeDir="false" afterPath="$PROJECT_DIR$/js/lib/modal-ids.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/lib/table-defs/product-columns.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/lib/table-defs/product-columns.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/lib/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/js/lib/utils.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/pages/admin/product/edit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/pages/admin/product/edit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/pages/admin/product/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/pages/admin/product/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/pages/admin/product/types/create.types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/js/pages/admin/product/types/create.types.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/pages/welcome.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/js/pages/welcome.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../vite.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../vite.config.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="NamedScopeManager">
+    <order>
+      <scope name="React" />
+    </order>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP" />
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="30kCAFoQodxXJTic1BTeq2HiIXo" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "master",
+    "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/USER/Herd/amby/resources",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "configurable.tailwindcss",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\PhpStorm 2025.1.2\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PS-251.27812.52" />
+        <option value="bundled-php-predefined-a98d8de5180a-e5747d4f5a45-com.jetbrains.php.sharedIndexes-PS-251.27812.52" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ea0477c8-d5b6-490e-bf5d-304f3d03d9c8" name="Changes" comment="" />
+      <created>1754162038761</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1754162038761</updated>
+      <workItem from="1754162040085" duration="3633000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
 </project>

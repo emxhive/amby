@@ -12,6 +12,7 @@ export const routes = {
 
     // Shop routes
     shop: {
+        index: 'shop.index',
         products: {
             index: 'shop.products.index',
             show: 'shop.products.show',
@@ -20,6 +21,9 @@ export const routes = {
             index: 'shop.orders.index',
             show: 'shop.orders.show',
         },
+
+        checkout: 'shop.checkout',
+
         address: {
             index: 'shop.address.index',
             create: 'shop.address.create',
@@ -43,6 +47,7 @@ export const routes = {
             edit: 'admin.products.edit',
             update: 'admin.products.update',
             destroy: 'admin.products.destroy',
+            upload: 'admin.products.upload',
         },
         orders: {
             index: 'admin.orders.index',
@@ -117,6 +122,63 @@ export const routes = {
         edit: 'profile.edit',
         update: 'profile.update',
         destroy: 'profile.destroy',
+    },
+
+    // Account routes
+    account: {
+        orders: {
+            index: 'account.orders.index',
+            show: 'account.orders.show',
+            update: 'account.orders.update',
+            destroy: 'account.orders.destroy',
+            cancel: 'account.orders.cancel',
+            confirm: 'account.orders.confirm',
+            ship: 'account.orders.ship',
+            complete: 'account.orders.complete',
+            refund: 'account.orders.refund',
+            download: 'account.orders.download',
+            download_invoice: 'account.orders.download_invoice',
+        },
+
+        addresses: {
+            index: 'account.addresses.index',
+            create: 'account.addresses.create',
+            store: 'account.addresses.store',
+            show: 'account.addresses.show',
+            edit: 'account.addresses.edit',
+            update: 'account.addresses.update',
+            destroy: 'account.addresses.destroy',
+        },
+    },
+
+    // Cart routes
+    cart: {
+        index: 'cart.index',
+    },
+
+    // Support/help routes
+    support: {
+        faq: 'support.faq',
+        shipping: 'support.shipping',
+        returns: 'support.returns',
+        warranty: 'support.warranty',
+        chat: 'support.chat',
+        shipping_restrictions: 'support.shipping_restrictions',
+    },
+
+    // Static content pages
+    pages: {
+        recipes: 'pages.recipes',
+        about: 'pages.about',
+        contact: 'pages.contact',
+        careers: 'pages.careers',
+        terms: 'pages.terms',
+    },
+
+    // Blog routes
+    blog: {
+        index: 'blog.index',
+        category: 'blog.category',
     },
 
     // Appearance settings

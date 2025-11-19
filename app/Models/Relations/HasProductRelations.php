@@ -4,6 +4,7 @@ namespace App\Models\Relations;
 
 use App\Models\Category;
 use App\Models\OrderItem;
+use App\Models\ProductReview;
 use App\Models\ProductVariation;
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,7 @@ trait HasProductRelations
         'category' => [],
         'tags' => [],
         'variations' => [],
+        'reviews' => [],
     ];
 
     public function category(): BelongsTo
@@ -38,6 +40,11 @@ trait HasProductRelations
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(ProductReview::class);
     }
 
 }

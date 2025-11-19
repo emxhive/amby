@@ -10,10 +10,14 @@ class InertiaViews
     const A_P_S = "admin/product/show";
     const A_P_C = "admin/product/create";
 
+    const A_P_E = "admin/product/edit";
+
+
     const S_O_I = "shop/order/index";
     const S_O_S = "shop/order/show";
     const A_O_I = "admin/order/index";
     const A_O_S = "admin/order/show";
+
 
     // Category views
     const A_C_I = "admin/category/index";

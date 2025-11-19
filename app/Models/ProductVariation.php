@@ -122,6 +122,8 @@ class ProductVariation extends Model
             $activeBatch->save();
         }
 
+        $dto->is_open = true;
+        $dto->notes = $dto->notes ?? "First Batch ";
         return $this->batches()->create($dto->toArray());
     }
 

@@ -7,7 +7,7 @@ use App\Models\CartItem;
 
 class CartItemManager extends BaseManager
 {
-    protected function model()
+    protected function model(): string
     {
         return CartItem::class;
     }

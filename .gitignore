@@ -40,3 +40,5 @@ yarn-error.log
 .junie/guidelines.md
 extract_schemas.ps1
 *.txt
+/prodex
+/.mds

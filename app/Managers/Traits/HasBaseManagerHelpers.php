@@ -19,7 +19,7 @@ trait HasBaseManagerHelpers
         }
     }
 
-    protected function imageService(): ImageService
+    public function imageService(): ImageService
     {
         if ($this->imageService === null) {
             $this->imageService = new ImageService($this->modelName);

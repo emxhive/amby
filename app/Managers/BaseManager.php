@@ -63,12 +63,12 @@ abstract class BaseManager
     }
 
 
-    public function find($id): ?Model
+    public function find($id, $relations = null): ?Model
     {
         $cacheKey = $this->generateCacheKey($id);
 
-        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($id) {
-            return $this->model()::with($this->relations())->find($id);
+        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($relations, $id) {
+            return $this->model()::with($this->relations($relations))->find($id);
         });
     }
 
@@ -90,22 +90,35 @@ abstract class BaseManager
     /**
      * @throws Throwable
      */
-    public function update(Model $model, array $data): Model
+    public function doUpdate(Model $model, array $data)
     {
-
 //        $this->authorizeAction("update", $model); TODO Add Policy Class
         $this->forgetModelCache($model->id);
 
 
         return DB::transaction(function () use ($model, $data) {
             $model->fill($data)->save();
-            return $model->refresh()->load($this->relations());
+            return $model->refresh()->load($this->relations([]));
 
         });
 
-
     }
 
+    /**
+     * @throws Throwable
+     */
+    public function update(Model $model, array $data): Model
+    {
+        return $this->doUpdate($model, $data);
+    }
+
+    /**
+     * @throws Throwable
+     */
+    public function patch(Model $model, array $data): Model
+    {
+        return $this->doUpdate($model, $data);
+    }
 
     /**
      * @throws Throwable

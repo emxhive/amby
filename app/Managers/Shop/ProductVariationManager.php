@@ -21,6 +21,7 @@ class ProductVariationManager extends BaseManager
         $variation = $product->variations()->create($dto->toArray());
 
         if ($dto->batch) {
+
             $variation->createNewBatch($dto->batch);
         }
         return $variation;

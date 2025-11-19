@@ -1,0 +1,57 @@
+{
+    "version": 3.1,
+    "output": {
+        "dir": "prodex",
+        "versioned": true,
+        "prefix": "combined",
+        "format": "md"
+    },
+    "entry": {
+        "files": [
+            "**/pages/shop/**"
+        ],
+        "ui": {
+            "roots": [
+                "app",
+                "routes",
+                "resources/js/**"
+            ],
+            "scanDepth": 2,
+            "priority": [
+                "**/routes/web.php",
+                "**/routes/api.php",
+                "**/*index.*",
+                "**/*main.*",
+                "**/app.*"
+            ]
+        }
+    },
+    "resolve": {
+        "include": [
+            "**/app.tsx",
+            "**/*.d.ts"
+        ],
+        "aliases": {
+            "@": "resources/js"
+        },
+        "exclude": [
+            "@shadcn/**",
+            "**/components/ui/**",
+            "@inertiajs/**"
+        ],
+        "depth": 10,
+        "limit": 200
+    },
+    "shortcuts": {
+        "front": {
+            "prefix": "shop-front",
+            "files": [
+                "**/pages/shop/**"
+            ],
+            "include": [
+                "**/app.tsx",
+                "**/*.d.ts"
+            ]
+        }
+    }
+}

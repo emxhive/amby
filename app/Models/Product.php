@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Attributes\HasProductAttributes;
 use App\Models\Config\HasProductHelpers;
 use App\Models\Relations\HasProductRelations;
 use App\Traits\ModelTrait;
@@ -13,12 +12,8 @@ class Product extends Model
 
     use HasProductHelpers;
     use HasProductRelations;
-    use HasProductAttributes;
     use ModelTrait;
 
-    protected $appends = [
-        'has_variations',
-    ];
 
     protected $fillable = [
         'category_id',
@@ -29,11 +24,15 @@ class Product extends Model
         'image',
         'status',
         'weight',
+        'reviews_count',
+        'average_rating',
     ];
 
     protected $casts = [
         'price' => 'float',
         'weight' => 'float',
+        'average_rating' => 'float',
+        'reviews_count' => 'integer',
     ];
 
 
@@ -44,7 +43,9 @@ class Product extends Model
         'price',
         'description',
         'image',
-        'weight'
+        'weight',
+        'reviews_count',
+        'average_rating',
     ];
 
     protected array $blacklist = [];

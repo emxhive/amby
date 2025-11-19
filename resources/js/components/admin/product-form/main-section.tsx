@@ -21,7 +21,7 @@ export default function MainSection({ data, setData, errors, className }: Props)
                 <Textarea
                     maxLength={500}
                     className={'h-64 max-h-46 w-full max-w-lg'}
-                    value={data.description}
+                    value={data.description || undefined}
                     onChange={(e: any) => setData('description', e.target.value)}
                 />
             </FormField>

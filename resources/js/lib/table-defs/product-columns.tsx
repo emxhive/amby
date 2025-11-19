@@ -1,9 +1,11 @@
 import { ActionButtons } from '@/components/action-buttons';
 import { Button } from '@/components/ui/button';
 import { routes } from '@/lib/routes';
-import { cn } from '@/lib/utils';
+import { cn, figs, imgSrc } from '@/lib/utils';
 import { router } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
+import { Utensils } from 'lucide-react';
+import Rating from 'react-rating';
 
 export const productColumns: ColumnDef<Product>[] = [
     {
@@ -16,59 +18,82 @@ export const productColumns: ColumnDef<Product>[] = [
     {
         accessorKey: 'name',
         header: 'Product Name',
-        cell: ({ row }) => (
-            <div className="flex items-center gap-3">
-                {row.original.image && (
-                    <img
-                        src={row.original.image}
-                        alt={row.original.name}
-                        className="h-10 w-10 rounded border border-border bg-background object-cover"
-                    />
-                )}
-                <div className="flex flex-col gap-1">
-                    <span className="font-medium text-foreground">{row.original.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                        {row.original.variations ? (
-                            <>
-                                {row.original.variations.length} variation{row.original.variations.length > 1 ? '' : 's'}
-                            </>
-                        ) : (
-                            ' '
-                        )}
-                    </span>
+        cell: ({ row }) => {
+            const { variations, name, image } = row.original;
+            return (
+                <div className="flex items-center gap-3">
+                    {image ? (
+                        <img src={imgSrc(image)} alt={name} className="h-10 w-10 rounded-full border border-border text-muted-foreground" />
+                    ) : (
+                        <Utensils className={cn('h-10 w-10 text-muted-foreground')} />
+                    )}
+                    <div className="flex flex-col gap-1">
+                        <span className="font-medium text-foreground">{name}</span>
+                        <span className="text-xs text-muted-foreground">
+                            <Button variant={'outline'}  className={cn('relative h-6 text-xs border-gray-100 hover:border-gray-300 transition-colors duration-300 rounded-sm')}>
+                                View variations ({variations.length})
+                            </Button>
+                        </span>
+                    </div>
                 </div>
-            </div>
-        ),
+            );
+        },
     },
 
     {
         accessorKey: 'price',
         header: 'Price',
-        cell: ({ row }) => <span className="text-foreground">{row.original.variations[0]?.price.toLocaleString() ?? 1000}</span>,
+        cell: ({ row }) => {
+            const { variations } = row.original;
+            let first: number | null = variations.length == 1 ? variations[0].price : null;
+            const className = 'text-foreground text-xs';
+            if (first !== null) return <span className={className}>{figs(first)}</span>;
+
+            const prices = variations.map((v) => v.price);
+            first = Math.min(...prices);
+            const last = Math.max(...prices);
+            return <span className={className}>{figs(first) + '-' + figs(last)}</span>;
+        },
     },
     // 2. Sales Column
     {
         accessorKey: 'sales',
         header: 'Sales',
         cell: ({ row }) => {
-            // Optional chaining/fallbacks
-            const sold = 100000;
-            const remaining = 0;
+            return <span className="text-xs text-muted-foreground">{figs(10000000)}</span>;
+        },
+        enableSorting: false,
+        size: 100,
+    },
+
+    // 3. Sales Column
+    {
+        accessorKey: 'feedback',
+        header: 'Feedback',
+        cell: ({ row }) => {
             return (
-                <span className="text-xs text-muted-foreground">
-                    {sold} sold / {remaining} left
-                </span>
+                <div className="flex flex-col text-xs text-muted-foreground">
+                    {/*@ts-ignore*/}
+                    <Rating
+                        initialRating={4.5}
+                        emptySymbol={<span style={{ color: '#ddd', fontSize: 20 }}>☆</span>}
+                        fullSymbol={<span style={{ color: '#FACC15', fontSize: 20 }}>★</span>}
+                        readonly
+                    />
+                    <span className="ml-2 text-xs">by 343 users</span>
+                </div>
             );
         },
         enableSorting: false,
         size: 100,
     },
-    // 1. Status Column
+    // 4. Status Column
     {
         accessorKey: 'status',
-        header: 'Status',
+        header: 'Actions',
         cell: ({ row }) => {
-            const isActive = row.original.status === 'active';
+            const { status, slug } = row.original;
+            const isActive = status === 'active';
             return (
                 <div className="flex items-center gap-2">
                     {/* Indicator */}
@@ -85,7 +110,17 @@ export const productColumns: ColumnDef<Product>[] = [
                             isActive ? 'text-muted-foreground' : '',
                         )}
                         onClick={() => {
-                            //TODO : IMPLEMENT CODE FOR TOGGLE ACTIVE/INACTIVE PRODUCT
+                            router.patch(
+                                route(routes.admin.products.update, { product: slug }),
+                                {
+                                    status: isActive ? 'inactive' : 'active',
+                                },
+                                {
+                                    preserveScroll: true,
+                                    preserveUrl: true,
+                                    onSuccess: () => {},
+                                },
+                            );
                         }}
                     >
                         {isActive ? 'Take Offline' : 'Go Live'}
@@ -105,7 +140,7 @@ export const productColumns: ColumnDef<Product>[] = [
                     {
                         type: 'edit',
                         onClick: function (): void {
-                            throw new Error('Function not implemented.');
+                            router.get(route(routes.admin.products.edit, row.original.slug));
                         },
                     },
                     {

@@ -1,14 +1,21 @@
+import { TwinFields, VariationSectionTextArea, VarIconButton } from '@/components/admin/product-form/components/variation-section-components';
 import { FormField } from '@/components/form-field';
+import { useModal } from '@/components/mx/modal-system/use-modal-system';
 import { SectionCard } from '@/components/section-card';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { volumeUnits } from '@/lib/constants';
-import { PlusSquare, X } from 'lucide-react';
-import { ReactNode, useEffect, useRef } from 'react';
+import { PRODUCT_UPDATE__ADD_BATCH_NOTES } from '@/lib/modal-ids';
+import { Info, Paperclip, PlusSquare, Trash2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 interface Props {
+    isCreate: boolean;
     data: ProductFormData;
-    setVariation: (idx: number, key: keyof FormVariation, value: string) => void;
+    setVariation: (idx: number, key: keyof FormVariation, value: string | boolean) => void;
     addVariation: () => void;
     removeVariation: (idx: number) => void;
     getVariationError: (idx: number, field: string) => string | undefined;
@@ -16,10 +23,12 @@ interface Props {
     className?: string;
 }
 
-export default function VariationsSection({ data, setVariation, addVariation, removeVariation, getVariationError, className }: Props) {
+export default function VariationsSection({ data, setVariation, addVariation, removeVariation, getVariationError, className, isCreate }: Props) {
     const cache = useRef({ varAdded: false });
     const fieldRef = useRef<HTMLElement>(null);
+    const notesRef = useRef('');
 
+    const { open, close } = useModal();
     useEffect(() => {
         if (cache.current.varAdded) {
             fieldRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -61,9 +70,43 @@ export default function VariationsSection({ data, setVariation, addVariation, re
                             <Input
                                 type="number"
                                 value={variation.stock}
-                                onChange={(e: any) => setVariation(idx, 'stock', e.target.value)}
+                                onChange={(e) => setVariation(idx, 'stock', e.target.value)}
                                 placeholder="Stock"
                             />
+
+                            {!isCreate && variation?.id && (
+                                <Tooltip>
+                                    <div className="absolute -bottom-2 left-1 z-10 flex w-full items-center gap-2 py-1">
+                                        <Checkbox
+                                            id={`fresh-batch-${idx}`}
+                                            checked={variation?.is_new_batch}
+                                            onCheckedChange={(checked) => setVariation(idx, 'is_new_batch', checked)}
+                                            className="transition data-[state=checked]:bg-black"
+                                        />
+                                        <div className="cursor-pointer text-xs text-gray-600">fresh batch {!variation.is_new_batch && '?'}</div>
+
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                type="button"
+                                                variant="outline"
+                                                size="icon"
+                                                className="mr-2 ml-auto flex size-3 items-center justify-center bg-transparent text-red-400 hover:bg-transparent hover:text-red-600"
+                                                aria-label="Info"
+                                            >
+                                                <Info className="size-3" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="top" align="center" className="text-xs">
+                                            Ends the previous batch and starts a new sales record.
+                                            <br />
+                                            Select only for major changes.
+                                            <br />
+                                            <br />
+                                            After selection, a note icon will appear. Click it to add details about the change.
+                                        </TooltipContent>
+                                    </div>
+                                </Tooltip>
+                            )}
                         </FormField>
 
                         <FormField label="Price" error={getVariationError(idx, 'price')}>
@@ -84,7 +127,7 @@ export default function VariationsSection({ data, setVariation, addVariation, re
                                 placeholder="e.g. 250"
                             />
                         </FormField>
-                        <FormField className={'flex-1/4'} label="Unit" error={getVariationError(idx, 'quantity_unit')}>
+                        <FormField className={'flex-1/2'} label="Unit" error={getVariationError(idx, 'quantity_unit')}>
                             <Select value={variation.quantity_unit} onValueChange={(val) => setVariation(idx, 'quantity_unit', val)}>
                                 <SelectTrigger>{variation.quantity_unit}</SelectTrigger>
                                 <SelectContent>
@@ -98,18 +141,38 @@ export default function VariationsSection({ data, setVariation, addVariation, re
                         </FormField>
                     </TwinFields>
 
-                    {idx > 0 && (
-                        <X
+                    <span className="absolute right-4 bottom-1 flex gap-4">
+                        <VarIconButton
+                            onClick={() => {
+                                open({
+                                    id: PRODUCT_UPDATE__ADD_BATCH_NOTES,
+                                    description: 'Record noteworthy info for new batch',
+                                    title: 'Add Notes',
+                                    content: <VariationSectionTextArea notes={variation.notes} noteRef={notesRef} />,
+                                    onClose: (value) => {
+                                        close(PRODUCT_UPDATE__ADD_BATCH_NOTES);
+                                        setVariation(idx, 'notes', notesRef.current);
+                                    },
+                                });
+                            }}
+                            condition={!!variation.is_new_batch}
+                            className={'bg-blue-100 text-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-400'}
+                            label={'Notes For New Batch'}
+                        >
+                            <Paperclip className="h-3 w-3" />
+                        </VarIconButton>
+
+                        <VarIconButton
+                            condition={idx > 0}
+                            label={'Remove variation'}
+                            className={'bg-red-100 text-red-500 hover:bg-red-600 focus:ring-2 focus:ring-red-400'}
                             onClick={() => removeVariation(idx)}
-                            className="absolute top-2 right-4 h-8 w-8 cursor-pointer rounded-full p-2 text-destructive transition-colors duration-300 hover:bg-destructive/10"
-                        />
-                    )}
+                        >
+                            <Trash2 className="h-3 w-3" />
+                        </VarIconButton>
+                    </span>
                 </div>
             ))}
         </SectionCard>
     );
 }
-
-const TwinFields = ({ children, className }: { children: ReactNode; className?: string }) => {
-    return <div className={'flex gap-1'}>{children}</div>;
-};

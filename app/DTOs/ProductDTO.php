@@ -14,6 +14,8 @@ class ProductDTO
 
     public static function fromArray(array $productData): self
     {
+
+//        dd($productData);
         $dto = new self();
         $dto->id = $productData['id'] ?? null;
         $dto->category_id = $productData['category_id'] ?? null;

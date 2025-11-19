@@ -1,12 +1,9 @@
 interface Product {
-    // remaining?: number;
-    // sold?: number;
     id: number;
     name: string;
     slug: string;
-    price: number;
-    status: 'active' | 'inactive';
-    image: string;
+    status: string;
+    image?: string | null;
     category_id?: number;
     category?: {
         id: number;
@@ -14,24 +11,24 @@ interface Product {
         slug: string;
     };
     description?: string;
-    weight?: number;
+    reviews_count: number;
+    average_rating: number;
     variations: ProductVariation[];
 }
 
 interface ProductVariation {
     id: number;
-    name: string;
     price: number;
-    sku: string;
-    status?: string;
-    stock?: number;
-    sold?: number;
+    sku?: string;
+    is_active?: boolean;
+    quantity: number;
+    quantity_unit: string;
     activeBatch?: VariationBatch;
 }
 
 interface VariationBatch {
     id: number;
-    status: 'open' | 'closed';
+    is_open: boolean;
     stock: number;
     sold: number;
     notes?: string;
@@ -63,12 +60,14 @@ interface PaginatedResponse<T> {
     };
 }
 
-
-
 interface Category {
+    slug: string;
     id: number;
     name: string;
     parent_id: number | null;
-    is_default: boolean;
-
+    is_default?: boolean;
+}
+interface Crumb {
+    label: string;
+    href: string;
 }

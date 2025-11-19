@@ -1,7 +1,7 @@
 import { FormField } from '@/components/form-field';
 import { SectionCard } from '@/components/section-card';
+import { cn, imgSrc } from '@/lib/utils';
 import { useRef } from 'react';
-import { cn } from '@/lib/utils';
 
 interface Props {
     data: ProductFormData;
@@ -28,7 +28,11 @@ export default function ThumbnailSection({ data, setData, errors, className }: P
                     onClick={() => fileInput.current?.click()}
                 >
                     {data.image ? (
-                        <img src={URL.createObjectURL(data.image)} alt="thumb" className="h-full w-full rounded object-cover" />
+                        <img
+                            src={typeof data.image == 'string' ? imgSrc(data.image) : URL.createObjectURL(data.image)}
+                            alt="thumb"
+                            className="h-full w-full rounded object-cover"
+                        />
                     ) : (
                         <span className="text-gray-400">Click to select</span>
                     )}
@@ -38,3 +42,5 @@ export default function ThumbnailSection({ data, setData, errors, className }: P
         </SectionCard>
     );
 }
+
+

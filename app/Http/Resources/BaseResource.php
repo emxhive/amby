@@ -20,7 +20,7 @@ class BaseResource extends JsonResource
     {
         $attributes = $this->resource->attributesToArray();
         if ($this->isAdmin) {
-            $fields = array_diff(array_keys($attributes), $this->resource->getBlackList());
+            $fields = array_diff(array_keys($attributes), $this->resource->getBlackList(), ["created_at", "updated_at", "deleted_at"]);
         } else {
             $fields = $this->resource->getWhiteList();
         }

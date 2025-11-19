@@ -40,6 +40,12 @@ abstract class CrudController extends Controller
     final public function cUpdate($request, $model)
     {
         try {
+
+            if ($request->isMethod('PATCH')) {
+                $validated = $request->validated();
+                abort_if(count($validated) > 2, 400, "Woah!! You're doing too much");
+                return $this->manager()->patch($model, $validated);
+            }
             return $this->manager()->update($model, $request->validated());
         } catch (Exception $e) {
             Log::error('Error updating model: ' . $e->getMessage(), [

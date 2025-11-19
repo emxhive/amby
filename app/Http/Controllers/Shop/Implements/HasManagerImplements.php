@@ -16,6 +16,7 @@ trait HasManagerImplements
 
     protected function init($ManagerClass, $isAdmin = false): void
     {
+
         $this->manager = new $ManagerClass($isAdmin);
     }
 }

@@ -31,9 +31,10 @@ class ProductVariationDTO
             $dto->attributes = $variation['attributes'] ?? null;
 
 
+
             $dto->batch = VariationBatchDTO::fromArray([
                 "is_open" => $variation["is_new_batch"] ?? false,
-                "stock" => $dto->stock ?? 50,
+                "stock" => $variation["stock"],
                 'notes' => $variation['notes'] ?? null,
             ]);
 

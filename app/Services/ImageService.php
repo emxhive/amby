@@ -25,7 +25,7 @@ class ImageService
     public function upload(array $data, string $oldPath = null): array
     {
         if (isset($data[$this->field]) && $data[$this->field] instanceof UploadedFile) {
-            $path = $data[$this->field]->store($this->folder, "public");
+            $path = $data[$this->field]->store("images/" . $this->folder, "public");
             if ($oldPath) {
                 Storage::disk("public")->delete($oldPath);
             }
@@ -34,5 +34,9 @@ class ImageService
         return $data;
     }
 
+    public function uploadFromRequest($request): string
+    {
+        return $request->file($this->field)->store("images/" . $this->folder, "public");
+    }
 
 }

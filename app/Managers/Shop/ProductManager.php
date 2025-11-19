@@ -71,16 +71,19 @@ class ProductManager extends BaseManager
     }
 
 
+
+
     /**
      * @param Product $model
      * @throws Throwable
      */
     public function update(Model $model, array $data): Model
     {
+
         try {
-            $data = $this->imageService()->upload($data);
 
             return DB::transaction(function () use ($data, $model) {
+
 
                 $productDTO = ProductDTO::fromArray($data);
                 $model->update($productDTO->toArray());

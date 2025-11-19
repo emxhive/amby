@@ -15,6 +15,9 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->string('image')->nullable();
             $table->string('status')->default('active');
+            // Aggregated review stats
+            $table->unsignedInteger('reviews_count')->default(0);
+            $table->decimal('average_rating', 3, 2)->default(0);
             $table->timestamps();
 
             $table->index("category_id");

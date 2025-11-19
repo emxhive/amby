@@ -20,7 +20,7 @@ class ShopProductController extends CrudController
         // Only load the necessary relationships for the index view
         $products = $this->manager()->query(['category', 'tags'])->paginate(15);
 
-        return Inertia::render(V::S_P_I, $this->wrap($products, true));
+        return Inertia::render(V::S_P_I, $this->wrapList($products, "products"));
     }
 
     public function show(Product $product): Response

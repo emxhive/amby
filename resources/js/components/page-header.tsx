@@ -1,4 +1,6 @@
+import { DotDotDotLoader } from '@/components/dot-dot-dot-loader';
 import { Button } from '@/components/ui/button';
+import { AnimateLoading } from '@/components/utils';
 import { cn } from '@/lib/utils';
 import React from 'react';
 
@@ -10,9 +12,21 @@ interface PageHeaderProps {
     actions?: React.ReactNode; // Custom, overrides the default button
     className?: string;
     children?: React.ReactNode; // For breadcrumbs, subtext, etc.
+    processing?: boolean;
+    processingLabel?: string;
 }
 
-export function PageHeader({ title, onAction, actionLabel = 'Save', actionVariant = 'default', actions, className, children }: PageHeaderProps) {
+export function PageHeader({
+    title,
+    onAction,
+    actionLabel = 'Save',
+    processingLabel = 'Saving',
+    actionVariant = 'default',
+    actions,
+    className,
+    children,
+    processing,
+}: PageHeaderProps) {
     return (
         <div
             className={cn(
@@ -26,10 +40,18 @@ export function PageHeader({ title, onAction, actionLabel = 'Save', actionVarian
             </div>
             <div className="flex items-center gap-3">
                 {actions ? (
-                    actions // If actions provided, use them
+                    actions
                 ) : (
-                    <Button className="h-8 w-28 px-5" variant={actionVariant} onClick={onAction}>
-                        {actionLabel}
+                    <Button disabled={processing} className="h-8 w-35 px-5" variant={actionVariant} onClick={onAction}>
+                        <AnimateLoading processing={!!processing} />
+                        {processing ? (
+                            <span>
+                                {processingLabel}
+                                <DotDotDotLoader />
+                            </span>
+                        ) : (
+                            actionLabel
+                        )}
                     </Button>
                 )}
             </div>

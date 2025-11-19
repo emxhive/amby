@@ -1,7 +1,8 @@
 import { Toaster } from '@/components/ui/sonner';
-import { Header } from '@/layouts/components/header';
+
 import Sidebar from '@/layouts/components/sidebar';
 import { ReactNode, useState } from 'react';
+import { Header } from '@/layouts/components/admin/header';
 
 interface AdminLayoutProps {
     children: ReactNode;

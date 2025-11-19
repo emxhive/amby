@@ -1,28 +1,37 @@
-import HeaderNav from '@/components/welcome/header-navbar';
-import HeroTextSection from '@/components/welcome/hero-left';
+import AdvertSection from '@/components/shop/advert-section';
+import { AmbyFinds } from '@/components/shop/amby-finds';
+import HeroTextSection from '@/components/shop/hero-left';
+import ProductListSection from '@/components/shop/product-list-section';
+import { TopPicks } from '@/components/shop/top-picks';
+import ShopLayout from '@/layouts/shop-layout';
+import { products } from '@/lib/constants';
 import { pi } from '@/lib/utils';
-import ss from '../../css/welcome.module.css';
+import React from 'react';
 
 const LandingPage: React.FC = () => {
     return (
-        <div className={ss.bgWrap}>
-            {/* <div className={ss.bgGlowRed}></div>
-            <div className={ss.bgGlowOrange}></div>
-            <div className={ss.bgOverlay}></div> */}
-            <div className={`m-auto flex h-dvh max-h-dvh max-w-[1280px] flex-col px-20`}>
-                <HeaderNav />
-
-                <main className="flex flex-1">
+        <ShopLayout>
+            <main className="flex flex-col gap-20">
+                {/* HERO */}
+                <section className="flex flex-1 gap-4">
                     <HeroTextSection />
-                    <div className="relative m-auto flex aspect-square w-1/3 items-center justify-center rounded-full bg-ambyYellow-100">
-                        <img src={pi('dated-popcorn.png')} className="absolute bottom-1/4 w-sm" />
-                    </div>
-                </main>
-            </div>
-        </div>
+                    <img src={pi('placeholder.png')} alt="IMAGE" className="w-1/2" />
+                </section>
+
+
+                <TopPicks />
+                <AdvertSection />
+
+                <ProductListSection initialItems={products} />
+            </main>
+        </ShopLayout>
     );
 };
 
-
-
 export default LandingPage;
+
+const past = (
+    <div className="relative m-auto flex aspect-square w-1/5 items-center justify-center rounded-full bg-ambyYellow-100">
+        <img src={pi('dated-popcorn.png')} className="absolute bottom-1/4 w-2/3" alt="IMAGE" />
+    </div>
+);
