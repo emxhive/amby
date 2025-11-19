@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { CheckboxGroup } from '@/components/shop/product/checkbox-group';
 import { PriceFilter } from '@/components/shop/product/price-filter';
 import { CheckboxFilter, RangeFilter } from '@/components/shop/product/types/filter-types';
-import { mockFilters } from '@/components/shop/product/types/mock';
+import { mockFilters } from '@/mocks/mockProductPreview';
 
 export function FilterSection() {
     const groups = mockFilters.filter((f) => f.type === 'checkbox') as CheckboxFilter[];

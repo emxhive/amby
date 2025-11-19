@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useState } from 'react';
+import { mockAddresses } from '@/mocks/mockAddresses';
 import { initialPersonalDetails } from './constants';
 import type { PersonalDetails } from './types';
 
@@ -13,11 +14,11 @@ const deliveryOptions = [
     { value: 'express', label: 'Express (1-2 days)' },
 ];
 
-// Mock saved addresses
-const savedAddresses = [
-    { id: 1, label: 'Home', summary: '11 Osbourne, Ikoyi, Lagos' },
-    { id: 2, label: 'Work', summary: '12 Norman Williams, Ikoyi, Lagos' },
-];
+const savedAddresses = mockAddresses.map((address) => ({
+    id: address.id,
+    label: address.label,
+    summary: [address.address, address.city, address.state].filter(Boolean).join(', '),
+}));
 
 interface Props {
     onNext: () => void;
@@ -27,7 +28,7 @@ export function PersonalDetailsForm({ onNext }: Props) {
     const [data, setData] = useState<PersonalDetails>(initialPersonalDetails);
     const [delivery, setDelivery] = useState(deliveryOptions[0].value);
     const [addressMode, setAddressMode] = useState<'saved' | 'new'>('new');
-    const [selectedSaved, setSelectedSaved] = useState(savedAddresses[0].id);
+    const [selectedSaved, setSelectedSaved] = useState(savedAddresses[0]?.id ?? 0);
     const [showLabelDialog, setShowLabelDialog] = useState(false);
     const [newAddressLabel, setNewAddressLabel] = useState('');
 

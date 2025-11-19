@@ -1,5 +1,5 @@
 import ShopLayout from '@/layouts/shop-layout';
-import { featuredProducts, products } from '@/lib/constants';
+import { featuredProducts, products } from '@/mocks/mockProducts';
 import { FilterSection } from '@/components/shop/product/filter-section';
 import { MoreLikeThis } from '@/components/shop/product/more-like-this';
 import { OurPicksRow } from '@/components/shop/product/our-picks-row';

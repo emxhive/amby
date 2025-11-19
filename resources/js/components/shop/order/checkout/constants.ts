@@ -47,33 +47,3 @@ export const phoneCountryCodes = [
     // ...
 ];
 
-export const savedAddresses = [
-    {
-        id: 1,
-        label: 'Home',
-        firstName: 'Ezekiel',
-        lastName: 'Adeleke',
-        email: 'zeki@email.com',
-        phone: '+234 808 888 8888',
-        country: 'NG',
-        address: '11 Osbourne Rd, Ikoyi',
-        city: 'Lagos',
-        state: 'Lagos',
-        postalCode: '101233',
-        extraInfo: '',
-    },
-    {
-        id: 2,
-        label: 'Work',
-        firstName: 'Zeki',
-        lastName: 'Ola',
-        email: 'zekiola@email.com',
-        phone: '+234 802 123 4321',
-        country: 'NG',
-        address: '12 Norman Williams St, Ikoyi',
-        city: 'Lagos',
-        state: 'Lagos',
-        postalCode: '101222',
-        extraInfo: 'Leave at reception',
-    },
-];

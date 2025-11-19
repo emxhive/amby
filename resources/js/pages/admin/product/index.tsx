@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import AdminLayout from '@/layouts/admin-layout';
-import { altProducts } from '@/lib/constants';
+import { altProducts } from '@/mocks/mockProducts';
 import { routes } from '@/lib/routes';
 import { productColumns } from '@/lib/table-defs/product-columns';
 import { Link, usePage } from '@inertiajs/react';
