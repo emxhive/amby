@@ -10,7 +10,7 @@ export default function ShopLayout({ children, className, headerUtilities, hideF
         <div className="min-h-dvh bg-background text-foreground">
             <Header rightUtilities={headerUtilities} />
             <main className={cn('mx-auto max-w-7xl px-4 py-6', className)}>{children}</main>
-            {/* Footer */}
+
             {!hideFooter && <ShopFooter />}
         </div>
     );

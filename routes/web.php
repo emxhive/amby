@@ -25,7 +25,7 @@ Route::as("shop.")->group(
         Route::middleware("auth")->group(function () {
             Route::resource("orders", ShopOrderController::class)->only(["store", "update"]);
             Route::get("checkout", function () {
-                return Inertia::render("shop/order/checkout");
+                return Inertia::render("shop/checkout");
             })->name("checkout");;
         });
     });
